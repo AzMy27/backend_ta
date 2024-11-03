@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DaiController;
+use App\Http\Controllers\ReportController;
+
+Route::get('/', function () {
+    return to_route('dai.index');
+});
+
+Route::get('/admin/dashboard',[DashboardController::class,'index'])->name('admin.dashboard');
+
+
+Route::controller(DaiController::class)->group(function(){
+    Route::get('/admin/dai', 'index')->name('dai.index');
+    Route::get('/admin/dai/create', 'create')->name('dai.create');
+    Route::post('/admin/dai/create', 'store')->name('dai.store');
+    Route::get('/admin/dai/{dai}/edit', 'edit')->name('dai.edit');
+    Route::get('/admin/dai/{dai}/show', 'show')->name('dai.show');
+    Route::put('/admin/dai/{dai}/edit', 'update')->name('dai.update');
+    Route::delete('/admin/dai/{dai}/destroy', 'destroy')->name('dai.destroy');
+});
+
+Route::controller(ReportController::class)->group(function(){
+    Route::get('/admin/report', 'index')->name('report.index');
+    Route::get('/admin/report/{report}/edit', 'edit')->name('report.edit');
+    Route::get('/admin/report/{report}/show', 'show')->name('report.show');
+    Route::put('/admin/report/{report}/edit', 'update')->name('report.update');
+    Route::delete('/admin/report/{report}/destroy', 'destroy')->name('report.destroy');
+});
