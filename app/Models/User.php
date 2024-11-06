@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'level',
     ];
 
     /**
@@ -38,6 +39,11 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+
+    public function isDai(){
+        return $this->name == 'Dai';
+        
+    }
     protected function casts(): array
     {
         return [

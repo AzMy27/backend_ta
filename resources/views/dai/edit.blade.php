@@ -20,7 +20,11 @@
                                     <div class="form-group">
                                         <label for="">Nama</label>
                                         <input type="text" value="{{$data->nama}}" name="nama" class="form-control" placeholder="Masukkan Nama">
-                                    </div>                                    
+                                    </div>  
+                                    <div class="form-group">
+                                        <label for="">No. Hp</label>
+                                        <input type="text" value="{{$data->no_hp}}" name="no_hp" class="form-control" placeholder="Masukkan Nama">
+                                    </div>                                  
                                     <div class="form-group">
                                         <label for="">Tanggal Lahir</label>
                                         <input type="date" value="{{$data->tanggal_lahir}}" name="tanggal_lahir" class="form-control" >

@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Report extends Model
 {
-    use HasFactory;
-    protected $fillable = ['title','place','date','description','images'];
+    protected $fillable = [
+        'title',
+        'place',
+        'date',
+        'description',
+        'images',
+        'user_id'
+        ];
 }

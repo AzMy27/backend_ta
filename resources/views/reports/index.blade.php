@@ -1,4 +1,4 @@
-@extends('layouts.app',['title'=>'Laporan','description'=>'Melihat Laporan'])
+@extends('layouts.app',['title'=>'Laporan','description'=>'Laporan Masuk'])
 @section('content')
 
                         <div class="card mb-4">
@@ -10,35 +10,31 @@
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
+                                            <th>Nama Dai</th>
+                                            <th>Domisili</th>
+                                            <th>Judul Kegiatan</th>
+                                            <th>Tanggal</th>
+                                            <th>Waktu</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
-               
+                                        @foreach ($reports as $key=>$item)
+                                            
                                         <tr>
-                                            <td>Herrod Chandler</td>
-                                            <td>Sales Assistant</td>
-                                            <td>San Francisco</td>
-                                            <td>59</td>
-                                            <td>2012/08/06</td>
-                                            <td>$137,500</td>
+                                            <td>{{$item->nama}}</td>
+                                            <td>{{$item->alamat}}</td>
+                                            <td>{{$item->title}}</td>
+                                            <td>{{$item->date}}</td>
+                                            <td>{{$item->updated_at}}</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{{route('reports.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
+                                                </div>
+                                            </td>
                                         </tr>
-                       
+                                        @endforeach
+
                                     </tbody>
                                 </table>
                             </div>

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Dai;
 
 class DaiController extends Controller
 {
@@ -23,16 +24,13 @@ class DaiController extends Controller
     {
         return view('dai.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         
         $data=$request->validate([
             'nik'=>'required',
             'nama'=>'required',
+            'no_hp'=>'required',
             'tanggal_lahir'=>'required|date',
             'tempat_lahir'=>'required',
             'alamat'=>'required',
@@ -44,7 +42,21 @@ class DaiController extends Controller
             $data['foto_dai'] =  $request->file('foto_dai')->store('foto_dai','public');
         }
 
-        Dai::create($data);
+        $dataDai = Dai::create($data);
+        
+        if($dataDai){
+            if(!$dataDai->user()->exists()){
+               $userDai = $dataDai->user()->create([
+                    'name'=>$request->nama,
+                    'email'=>$request->email,
+                    'password'=>bcrypt($request->password),
+                    'level'=>'dai',
+                ]);
+                $dataDai->update([
+                    'user_id'=>$userDai->id,
+                ]);
+            }
+        }
         return to_route('dai.index')->with('success','Data Berhasil Ditambah');
     }
 
@@ -73,6 +85,7 @@ class DaiController extends Controller
         $data=$request->validate([
             'nik'=>'required',
             'nama'=>'required',
+            'no_hp'=>'required',
             'tanggal_lahir'=>'required|date',
             'tempat_lahir'=>'required',
             'alamat'=>'required',
@@ -92,6 +105,10 @@ class DaiController extends Controller
      */
     public function destroy(Dai $dai)
     {
+        
+        if($dai->foto_dai && Storage::disk('public')->exists($dai->foto_dai)){
+            Storage::disk('public')->delete($dai->foto_dai);
+        }
         $dai->delete();
         return to_route('dai.index');
     }

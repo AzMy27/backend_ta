@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('nik');
             $table->string('nama');
+            $table->string('no_hp');
             $table->date('tanggal_lahir');
             $table->string('tempat_lahir');
             $table->string('alamat');
             $table->string('pendidikan_akhir');
             $table->string('status_kawin');
             $table->string('foto_dai');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

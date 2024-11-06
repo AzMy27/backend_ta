@@ -1,15 +1,13 @@
-@extends('layouts.app',['title'=>'Dai','description'=>'Melihat daftar dai'])
+@extends('layouts.app',['title'=>'Daftar Dai','description'=>'Melihat daftar dai'])
 @section('content')
-
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
-                                Daftar DAI
-
+                                DAFTAR DAI
                                 <a href="{{route('dai.create')}}" class="btn btn-primary btn-sm float-end">Tambah</a>
                             </div>
                             <div class="card-body">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered" id="datatablesSimple">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -19,7 +17,6 @@
                                             <th style="width: 2%">Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         @foreach ($data as $key=>$item)
                                         <tr >
@@ -38,11 +35,8 @@
                                                     </form>
                                                 </div>
                                             </td>
-
                                         </tr>
-                                        @endforeach
-
-                       
+                                        @endforeach                       
                                     </tbody>
                                 </table>
                             </div>

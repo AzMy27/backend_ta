@@ -14,12 +14,15 @@
                                     <div class="form-group">
                                         <label for="">NIK</label>
                                         <input type="text" name="nik" class="form-control" placeholder="Masukkan NIK">
-
                                     </div>
                                     <div class="form-group">
                                         <label for="">Nama</label>
                                         <input type="text" name="nama" class="form-control" placeholder="Masukkan Nama">
-                                    </div>                                    
+                                    </div>       
+                                    <div class="form-group">
+                                        <label for="">No. HP</label>
+                                        <input type="text" name="no_hp" class="form-control" placeholder="Masukkan No. Hp">
+                                    </div>                             
                                     <div class="form-group">
                                         <label for="">Tanggal Lahir</label>
                                         <input type="date" name="tanggal_lahir" class="form-control" >
@@ -27,7 +30,6 @@
                                     <div class="form-group">
                                         <label for="">Tempat Lahir</label>
                                         <input type="text" name="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir">
-
                                     </div>                                    
                                     <div class="form-group">
                                         <label for="">Alamat</label>
