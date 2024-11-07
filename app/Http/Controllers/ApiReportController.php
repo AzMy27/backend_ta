@@ -10,8 +10,8 @@ class ApiReportController extends Controller
 {
     public function index()
     {
-        $report = Report::get();
-        return response()->json($report);
+        $reportAPI = Report::get();
+        return response()->json($reportAPI);
     }
 
 
@@ -34,8 +34,8 @@ class ApiReportController extends Controller
         //     $validatedData['images'] = $request->file('images')->store('laporan','public');
         // }
 
-        $report = Report::create($validatedData);
-        return response()->json($report,201);
+        $reportAPI = Report::create($validatedData);
+        return response()->json($reportAPI,201);
     }
 
     /**
@@ -43,8 +43,8 @@ class ApiReportController extends Controller
      */
     public function show(string $id)
     {
-        $report = Report::findOrFail($id);
-        return response()->json($report);
+        $reportAPI = Report::findOrFail($id);
+        return response()->json($reportAPI);
     }
 
     /**
@@ -60,17 +60,17 @@ class ApiReportController extends Controller
      */
     public function destroy(string $id)
     {
-        $report = Report::findOrFail($id);
+        $reportAPI = Report::findOrFail($id);
         
-        if($report->images){
-            Storage::delete('public'.$report->images);
+        if($reportAPI->images){
+            Storage::delete('public'.$reportAPI->images);
         }
 
         // if($report->images && Storage::disk('public')->exists($dai->foto_dai)){
         //     Storage::disk('public')->delete($dai->foto_dai);
         // }        
 
-        $report->delete();
+        $reportAPI->delete();
         return response()->json(['message'=>'Laporan Berhasil Dihapus'],204);
     }
 }

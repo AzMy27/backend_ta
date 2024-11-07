@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/admin/dashboard',[DashboardController::class,'index'])->name('admin.dashboard');
+Route::get('/admin/dashboard',[DashboardController::class,'index'])->middleware('auth')->name('admin.dashboard');
 
 
 Route::get('/login',[loginController::class,'index'])->name('login');
@@ -28,7 +28,7 @@ Route::post('/register',[UserController::class,'store'])->name('register.store')
 
 
 Route::controller(DaiController::class)->group(function(){
-    Route::get('/admin/dai', 'index')->name('dai.index');
+    Route::get('/admin/dai', 'index')->middleware('auth')->name('dai.index');
     Route::get('/admin/dai/create', 'create')->name('dai.create');
     Route::post('/admin/dai/create', 'store')->name('dai.store');
     Route::get('/admin/dai/{dai}/edit', 'edit')->name('dai.edit');
@@ -38,7 +38,7 @@ Route::controller(DaiController::class)->group(function(){
 });
 
 Route::controller(ReportController::class)->group(function(){
-    Route::get('/admin/report', 'index')->name('report.index');
+    Route::get('/admin/report', 'index')->middleware('auth')->name('report.index');
     Route::get('/admin/report/{report}/edit', 'edit')->name('report.edit');
     Route::get('/admin/report/{report}/show', 'show')->name('report.show');
     Route::put('/admin/report/{report}/edit', 'update')->name('report.update');

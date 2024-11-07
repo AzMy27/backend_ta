@@ -15,8 +15,6 @@ class ReportController extends Controller
     }
 
 
-
-
     public function show(string $id)
     {
         return view('reports.show',['reports'=>$id]);
