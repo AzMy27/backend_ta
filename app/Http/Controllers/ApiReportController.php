@@ -17,7 +17,7 @@ class ApiReportController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData =$request->validate([
+        $validateData =$request->validate([
             'title'=>'required',
             'place'=>'required',
             'date'=>'required|date',
@@ -28,36 +28,44 @@ class ApiReportController extends Controller
         foreach($request->file('images') as $images) {
             $path[] = $images->store('laporan','public'); 
         }
-            $validatedData['images'] = json_encode($path); 
+            $validateData['images'] = json_encode($path); 
 
         // if($request->hasFile('images')){
-        //     $validatedData['images'] = $request->file('images')->store('laporan','public');
+        //     $validateData['images'] = $request->file('images')->store('laporan','public');
         // }
 
-        $reportAPI = Report::create($validatedData);
+        $reportAPI = Report::create($validateData);
         return response()->json($reportAPI,201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $reportAPI = Report::findOrFail($id);
         return response()->json($reportAPI);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $validateData = $request->validate([
+            'title'=>'required',
+            'place'=>'required',
+            'date'=>'required',
+            'description'=>'required',
+            'images'=>'required|array',
+            ]);
+
+            $reportAPI = Report::findOrFail($id);
+            $reportAPI->update($validateData);
+            if($request->hasFile('images')){
+                $path = [];
+                foreach($request->file('images') as $images) {
+                    $path[] = $images->store('laporan','public');
+                }
+                $reportAPI->update(['images' => json_encode($path)]);
+            }
+            return response()->json($reportAPI,200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $reportAPI = Report::findOrFail($id);

@@ -5,28 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Dai;
+use Illuminate\Support\Facades\Auth;
+
 
 class DaiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $data = Dai::get();
         return view('dai.index',['data'=>$data]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('dai.create');
     }
+
     public function store(Request $request)
     {
-        
         $data=$request->validate([
             'nik'=>'required',
             'nama'=>'required',
@@ -41,8 +37,8 @@ class DaiController extends Controller
         if($request->hasFile('foto_dai')){
             $data['foto_dai'] =  $request->file('foto_dai')->store('foto_dai','public');
         }
-
-        $dataDai = Dai::create($data);
+    
+        $dataDai = Auth::user()->desa->dai()->create($data);
         
         if($dataDai){
             if(!$dataDai->user()->exists()){
@@ -74,7 +70,6 @@ class DaiController extends Controller
     public function edit(Dai $dai)
     {
         return view('dai.edit',['data'=>$dai]);
-
     }
 
     /**

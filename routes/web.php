@@ -6,6 +6,7 @@ use App\Http\Controllers\DaiController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DesaController;
 
 Route::get('/', function () {
     return to_route('dai.index');
@@ -21,14 +22,13 @@ Route::post('/login',[loginController::class,'submit'])->name('login.submit');
 Route::get('/logout',[loginController::class,'logout'])->middleware('auth')->name('logout');
 
 
-
 Route::get('/register',[UserController::class,'index'])->name('register');
 Route::post('/register',[UserController::class,'store'])->name('register.store');
 
 
 
-Route::controller(DaiController::class)->group(function(){
-    Route::get('/admin/dai', 'index')->middleware('auth')->name('dai.index');
+Route::controller(DaiController::class)->middleware('auth')->group(function(){
+    Route::get('/admin/dai', 'index')->name('dai.index');
     Route::get('/admin/dai/create', 'create')->name('dai.create');
     Route::post('/admin/dai/create', 'store')->name('dai.store');
     Route::get('/admin/dai/{dai}/edit', 'edit')->name('dai.edit');
@@ -37,8 +37,18 @@ Route::controller(DaiController::class)->group(function(){
     Route::delete('/admin/dai/{dai}/destroy', 'destroy')->name('dai.destroy');
 });
 
-Route::controller(ReportController::class)->group(function(){
-    Route::get('/admin/report', 'index')->middleware('auth')->name('report.index');
+Route::controller(DesaController::class)->middleware('auth')->group(function(){
+    Route::get('/admin/desa', 'index')->name('desa.index');
+    Route::get('/admin/desa/create', 'create')->name('desa.create');
+    Route::post('/admin/desa/create', 'store')->name('desa.store');
+    Route::get('/admin/desa/{desa}/edit', 'edit')->name('desa.edit');
+    Route::get('/admin/desa/{desa}/show', 'show')->name('desa.show');
+    Route::put('/admin/desa/{desa}/edit', 'update')->name('desa.update');
+    Route::delete('/admin/desa/{desa}/destroy', 'destroy')->name('desa.destroy');
+});
+
+Route::controller(ReportController::class)->middleware('auth')->group(function(){
+    Route::get('/admin/report', 'index')->name('report.index');
     Route::get('/admin/report/{report}/edit', 'edit')->name('report.edit');
     Route::get('/admin/report/{report}/show', 'show')->name('report.show');
     Route::put('/admin/report/{report}/edit', 'update')->name('report.update');

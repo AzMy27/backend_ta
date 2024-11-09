@@ -23,6 +23,12 @@ class User extends Authenticatable
         'password',
         'level',
     ];
+    public function kecamatan(){
+        return $this->hasOne(Kecamatan::class);
+    }
+    public function desa(){
+        return $this->hasOne(Desa::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

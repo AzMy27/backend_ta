@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('status_kawin');
             $table->string('foto_dai');
             $table->foreignId('user_id');
+            $table->foreignId('desa_id');
             $table->timestamps();
         });
     }

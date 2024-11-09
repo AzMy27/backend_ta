@@ -12,6 +12,13 @@ class Report extends Model
         'date',
         'description',
         'images',
-        'user_id'
-        ];
+        'dai_id',
+        'koreksi_desa',
+        'validasi_desa',
+        'koreksi_kecamatan',
+        'validasi_kecamatan'
+    ];
+    public function dai(){
+        return $this->belongsTo(Dai::class);
+    }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.app',['title'=>'Tambah Dai','description'=>'Tambah Data Dai'])
+@extends('layouts.app',['title'=>'Edit Dai','description'=>'Edit Data Dai'])
 @section('content')
 
                         <div class="card mb-4">

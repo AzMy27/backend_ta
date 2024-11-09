@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('report', function (Blueprint $table) {
+        Schema::create('kecamatans', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('place');
-            $table->date('date');
-            $table->text('description');
-            $table->text('images');
+            $table->string('nama_kecamatan');
+            $table->string('nama_koordinator');
+            $table->string('no_telp_koordinator');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('report');
+        Schema::dropIfExists('kecamatans');
     }
 };

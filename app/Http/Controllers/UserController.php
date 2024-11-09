@@ -19,7 +19,6 @@ class UserController extends Controller
             'level' => 'required'
         ]);
 
-        // Create the user
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -27,7 +26,6 @@ class UserController extends Controller
             'level' => $request->level,
         ]);
 
-        // Redirect or return a response
         return redirect()->route('dashboard.adminkab')->with('success', 'Registration successful!');
     }
 }

@@ -11,6 +11,10 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                 Laporan
             </a>
+            <a class="nav-link" href="{{route('desa.index')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                Daftar Desa
+            </a>
             <a class="nav-link" href="{{route('dai.index')}}">
                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                 Daftar Dai

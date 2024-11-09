@@ -20,7 +20,7 @@
             <tbody>
                 @foreach ($reports as $key=>$item)                                            
                 <tr>
-                    <td>{{$item->nama}}</td>
+                    <td>{{$item->dai->nama}}</td>
                     <td>{{$item->alamat}}</td>
                     <td>{{$item->title}}</td>
                     <td>{{$item->date}}</td>

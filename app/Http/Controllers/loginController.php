@@ -29,7 +29,12 @@ class loginController extends Controller
         ])){
             $request->session()->regenerate();
             return redirect()->route('admin.dashboard');
+        }else{
+            return back()->with('warning','gagal username password tidak ditemukan');
         }
+        // return redirect()->back()->withErrors([
+        //     'Invalid email or password'
+        // ]);
     }
 
     public function logout()

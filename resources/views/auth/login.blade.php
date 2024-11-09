@@ -22,6 +22,11 @@
                                     <div class="card-body">
                                         <form action="{{route('login.submit')}}" method="POST" >
                                             @csrf
+                                            @if (session()->has('warning'))
+                                                <div class="alert alert-warning">
+                                                    {{session()->get('warning')}}
+                                                </div>
+                                            @endif
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" name="email" />
                                                 <label for="inputEmail">Email address</label>
