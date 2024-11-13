@@ -23,7 +23,7 @@ class DashboardController extends Controller implements HasMiddleware
 
     public function index()
     {
-        return view('dashboard.adminkab');
+        return view('dashboard.admin');
     }
 }
 

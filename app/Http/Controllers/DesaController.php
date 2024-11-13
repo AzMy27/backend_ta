@@ -45,8 +45,6 @@ class DesaController extends Controller
        ])->id;
         Auth::user()->kecamatan->desa()->create($dataDesa);
         return redirect()->route('desa.index')->with('success','Data Desa Berhasil Ditambah');
-
-
     }
 
     /**
