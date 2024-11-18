@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Dai;
+use App\Models\Desa;
 use Illuminate\Support\Facades\Auth;
 
 

@@ -61,7 +61,7 @@
                                     </div>
                                     <br>
                                     <div class="form-grup" >
-                                        <button class="btn-primary btn btn-sm float-end">Kirim</button>
+                                        <button class="btn-primary btn btn-sm float-end">Tambah</button>
                                     </div>
                                 </form>
 

@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 class ApiLoginController extends Controller
 {
 
-    public function login(Request $request)
+    public function loginAPI(Request $request)
     {
         try {
             $validatedData = $request->validate([
@@ -44,11 +44,10 @@ class ApiLoginController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logoutAPI(Request $request)
     {
         try {
             $request->user()->currentAccessToken()->delete();
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Logged out successfully'
