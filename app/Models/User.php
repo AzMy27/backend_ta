@@ -31,7 +31,9 @@ class User extends Authenticatable
     public function desa(){
         return $this->hasOne(Desa::class);
     }
-
+    public function dai(){
+        return $this->hasOne(Dai::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -49,7 +51,7 @@ class User extends Authenticatable
      */
 
     public function isDai(){
-        return $this->name == 'dai';
+        return $this->level == 'dai';
         
     }
     protected function casts(): array

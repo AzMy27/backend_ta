@@ -22,6 +22,9 @@ class Dai extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    public function reports(){
+        return $this->hasMany(Report::class);
+    }
     public function desa(){
         return $this->belongsTo(Desa::class);
     }

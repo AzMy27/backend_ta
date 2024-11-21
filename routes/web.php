@@ -12,21 +12,14 @@ Route::get('/', function () {
     return to_route('dai.index');
 });
 
-
-
 Route::get('/admin/dashboard',[DashboardController::class,'index'])->middleware('auth')->name('admin.dashboard');
-
 
 Route::get('/login',[loginController::class,'index'])->name('login');
 Route::post('/login',[loginController::class,'submit'])->name('login.submit');
 Route::get('/logout',[loginController::class,'logout'])->middleware('auth')->name('logout');
 
-
 Route::get('/register',[UserController::class,'index'])->name('register');
 Route::post('/register',[UserController::class,'store'])->name('register.store');
-
-
-
 Route::controller(DaiController::class)->middleware('auth')->group(function(){
     Route::get('/admin/dai', 'index')->name('dai.index');
     Route::get('/admin/dai/create', 'create')->name('dai.create');
