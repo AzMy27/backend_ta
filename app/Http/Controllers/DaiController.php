@@ -126,13 +126,16 @@ class DaiController extends Controller
             'status_kawin'=>'required',
             'foto_dai'=>'nullable|image',
         ]); 
-        if($request->hasFile('foto_dai')){
-            if($dai->foto_dai && Storage::disk('public')->exists($dai->foto_dai)){
-                Storage::disk('public')->delete('foto_dai')->store('foto_dai','public');
+        if ($request->hasFile('foto_dai')) {
+            if ($dai->foto_dai && Storage::disk('public')->exists($dai->foto_dai)) {
+                Storage::disk('public')->delete($dai->foto_dai);
             }
-            $data['foto_dai'] =  $request->file('foto_dai')->store('foto_dai','public');
-        }        
+
+            $data['foto_dai'] = $request->file('foto_dai')->store('foto_dai', 'public');
+        }
+
         $dai->update($data);
+
         if ($dai->user) {
             $dai->user->update([
                 'image' => $data['foto_dai'] ?? $dai->foto_dai, // sinkronkan dengan foto_dai
