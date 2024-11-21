@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('pendidikan_akhir');
             $table->string('status_kawin');
-            $table->string('foto_dai');
+            $table->string('foto_dai')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('desa_id');
             $table->timestamps();

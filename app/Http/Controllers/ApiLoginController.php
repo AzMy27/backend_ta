@@ -32,7 +32,13 @@ class ApiLoginController extends Controller
             return response()->json([
                 'status' => 'success',
                 'token' => $token,
-                'token_type' => 'Bearer'
+                'token_type' => 'Bearer',
+                'user'=>[
+                    'id'=>$user->id,
+                    'name'=>$user->name,
+                    'image'=>$user->image,
+                    'email'=>$user->email ?? "email tidak ditemukan"
+                ]
             ]);
 
         } catch (ValidationException $e) {

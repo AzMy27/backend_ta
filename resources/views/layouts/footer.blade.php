@@ -19,5 +19,50 @@
 <script src="{{url('/assets/demo/chart-bar-demo.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="{{url('/js/datatables-simple-demo.js')}}"></script>
+<script>
+    @if ($errors->any())
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops! Ada kesalahan!',
+            html: `
+                <ul style="text-align: left;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            `,
+        });
+    @endif
+
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: "{{ session('success') }}",
+        });
+    @endif
+</script>
+<script>
+    let formToDelete; 
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        const deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                formToDelete = this.closest('.delete-form');
+                deleteModal.show();
+            });
+        });
+
+        confirmDeleteBtn.addEventListener('click', function () {
+            if (formToDelete) {
+                formToDelete.submit(); // Kirim form
+            }
+        });
+    });
+</script>
 </body>
 </html>

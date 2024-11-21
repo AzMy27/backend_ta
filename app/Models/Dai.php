@@ -16,7 +16,8 @@ class Dai extends Model
         'pendidikan_akhir',
         'status_kawin',
         'foto_dai',
-        'user_id'
+        'user_id',
+        'desa_id',
         ];
     public function user(){
         return $this->belongsTo(User::class);

@@ -60,7 +60,7 @@ class DesaController extends Controller
      */
     public function edit(Desa $desa)
     {
-        //
+        return view('desa.edit',['dataDesa'=>$desa]);
     }
 
     /**

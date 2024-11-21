@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use app\Model\Dai;
 
 class ApiDaiController extends Controller
 {
@@ -27,7 +28,19 @@ class ApiDaiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try{
+            $daiAPI = Dai::findOrFail($id);
+
+            return repsonse()->json([
+                "status"=>"success",
+                "data"=>$daiAPI
+            ],200);
+        }catch(\Exception $e){
+            return response()->json([
+                "status"=>"error",
+                "message"=>"Data not found"
+            ],404);
+        }
     }
 
     /**

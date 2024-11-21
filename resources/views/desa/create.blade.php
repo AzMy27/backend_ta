@@ -1,6 +1,5 @@
 @extends('layouts.app',['title'=>'Tambah Desa','description'=>'Tambah Data Desa'])
 @section('content')
-
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-table me-1"></i>
@@ -12,7 +11,7 @@
                                 <form action="{{route('desa.store')}}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
-                                        <label for="">Nama Desa</label>
+                                        <label for="">Desa</label>
                                         <input type="text" name="nama_desa" class="form-control" placeholder="Masukkan Nama Desa">
                                     </div>
                                     <div class="form-group">
