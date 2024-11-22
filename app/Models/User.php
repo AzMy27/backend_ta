@@ -52,7 +52,9 @@ class User extends Authenticatable
 
     public function isDai(){
         return $this->level == 'dai';
-        
+    }
+        public function isDesa(){
+        return $this->level == 'desa';
     }
     protected function casts(): array
     {

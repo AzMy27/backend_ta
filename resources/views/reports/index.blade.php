@@ -21,7 +21,7 @@
                 @foreach ($reports as $key=>$item)                                            
                 <tr>
                     <td>{{$item->dai->nama}}</td>
-                    <td>{{$item->desa}}</td>
+                    <td>{{$item->dai->desa->nama_desa}}, {{$item->dai->desa->kecamatan->nama_kecamatan}}</td>
                     <td>{{$item->title}}</td>
                     <td>{{$item->date}}</td>
                     <td>{{$item->updated_at}}</td>
