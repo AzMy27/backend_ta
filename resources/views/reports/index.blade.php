@@ -27,7 +27,7 @@
                     <td>{{$item->updated_at}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{route('report.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
+                            <a href="{{route('reports.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
                         </div>
                     </td>
                 </tr>

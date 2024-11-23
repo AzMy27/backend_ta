@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
+use PDF;
 
 
 class ReportController extends Controller
@@ -26,7 +27,8 @@ class ReportController extends Controller
 
     public function show(string $id)
     {
-        return view('reports.show',['reports'=>$id]);
+        $reports = Report::findOrFail($id);
+        return view('reports.show',['reports'=>$reports]);
     }
 
 
@@ -48,5 +50,17 @@ class ReportController extends Controller
     {
         $id->delete();
         return to_route('reports.index');
+    }
+
+    public function downloadPDF(string $id)
+    {
+        $report = Report::findOrFail($id);
+        
+        $pdf = PDF::loadView('reports.pdf', [
+            'report' => $report,
+            'images' => json_decode($report->images, true)
+        ]);
+        
+        return $pdf->download('laporan-'.$report->title.'.pdf');
     }
 }

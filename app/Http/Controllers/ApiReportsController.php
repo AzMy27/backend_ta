@@ -15,7 +15,6 @@ class ApiReportsController extends Controller
     public function index(Request $request)
     {
         try{
-
         $data = $request->user()->dai->reports;
         $reports_data = [];
         foreach($data as $report) {
@@ -59,41 +58,73 @@ class ApiReportsController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'title'=>'required|string',
-            'place'=>'required|string',
-            'date'=>'required|date',
-            'description'=>'required|string',
-            'images'=>'required',
+            'title' => 'required|string|max:255',
+            'place' => 'required|string|max:255',
+            'date' => 'required|date',
+            'description' => 'required|string',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg', // Validate each image
         ]);
 
-        try{
-            foreach($request->file('images') as $images){
-                    $path[]=$images->store('laporan','public');
-            }
-            $validateData['images']= json_encode($path);
-
-                //create report dari auth user api lalu relasi dai dan report dai
-            $reportAPI = $request->user()->dai->reports()->create($validateData);
-
-            return response()->json([
-                'status'=>'success',
-                'message'=>'Laporan Berhasil Dibuat',
-                'data'=>$reportAPI
-            ],201);
-        }catch(\Exception $e){
-            foreach ($path as $filePath) {
-                if (Storage::disk('public')->exists($filePath)) {
-                    Storage::disk('public')->delete($filePath);
+        try {
+            $paths = []; // Initialize paths array
+            
+            // Handle image uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    // Generate unique filename
+                    $filename = uniqid('report_') . '.' . $image->getClientOriginalExtension();
+                    
+                    // Store the file and get path
+                    $path = $image->storeAs('laporan', $filename, 'public');
+                    if ($path) {
+                        $paths[] = $path;
+                    } else {
+                        throw new \Exception('Failed to store image');
+                    }
                 }
             }
 
-            \Log::error("Failed to create report: " . $e->getMessage());
+            // Ensure we have images
+            if (empty($paths)) {
+                throw new \Exception('No images were uploaded');
+            }
+
+            // Create report data
+            $reportData = [
+                'title' => $validateData['title'],
+                'place' => $validateData['place'],
+                'date' => $validateData['date'],
+                'description' => $validateData['description'],
+                'images' => json_encode($paths)
+            ];
+
+            // Create report
+            $report = $request->user()->dai->reports()->create($reportData);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Laporan Berhasil Dibuat',
+                'data' => $report
+            ], 201);
+
+        } catch (\Exception $e) {
+            // Clean up any uploaded files if there was an error
+            if (!empty($paths)) {
+                foreach ($paths as $filePath) {
+                    if (Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
+                }
+            }
+
+            Log::error("Failed to create report: " . $e->getMessage());
+            
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to create report',
-                'error' => $e->getMessage(),
+                'error' => $e->getMessage()
             ], 500);
-       }
+        }
     }
 
     /**
@@ -101,6 +132,8 @@ class ApiReportsController extends Controller
      */
     public function show(Report $report)
     {
+        $a['title'] = $report->title;
+        $a['place'] = $report->place;
         $a['date'] = $report->date;
         $a['description'] = $report->description;
         $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;

@@ -8,7 +8,7 @@
             </a>
             @if (Auth::user()->level == 'kecamatan')
             <div class="sb-sidenav-menu-heading">Data</div>
-            <a class="nav-link" href="{{route('report.index')}}">
+            <a class="nav-link" href="{{route('reports.index')}}">
                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                 Laporan
             </a>

@@ -41,9 +41,11 @@ Route::controller(DesaController::class)->middleware('auth')->group(function(){
 });
 
 Route::controller(ReportController::class)->middleware('auth')->group(function(){
-    Route::get('/admin/report', 'index')->name('report.index');
-    Route::get('/admin/report/{report}/edit', 'edit')->name('report.edit');
-    Route::get('/admin/report/{report}/show', 'show')->name('report.show');
-    Route::put('/admin/report/{report}/edit', 'update')->name('report.update');
-    Route::delete('/admin/report/{report}/destroy', 'destroy')->name('report.destroy');
+    Route::get('/admin/report', 'index')->name('reports.index');
+    Route::get('/admin/report/{laporan}/edit', 'edit')->name('reports.edit');
+    Route::get('/admin/report/{laporan}/show', 'show')->name('reports.show');
+    Route::put('/admin/report/{laporan}/edit', 'update')->name('reports.update');
+    Route::delete('/admin/report/{laporan}/destroy', 'destroy')->name('reports.destroy');
 });
+
+Route::get('/reports/{id}/download', [ReportController::class, 'downloadPDF'])->name('reports.download');
