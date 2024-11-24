@@ -2,16 +2,31 @@
 @section('content')
 <div class="row mb-5 justify-content-center">
     <div class="col-6">
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>Desa: </strong>{{$dataDesa->nama_desa}}</li>
-                    <li class="list-group-item"><strong>Kepala Desa: </strong>{{$dataDesa->nama_kepala}}</li>
-                    <li class="list-group-item"><strong>Telepon: </strong>{{$dataDesa->no_telp_desa}}</li>
-
-                </ul>
-                <a href="{{route('desa.index')}}" class="btn btn-danger ">Kembali</a>
-                
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="bg-light">Nama Desa</th>
+                        <td>{{$dataDesa->nama_desa}}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nama Desa</th>
+                        <td>{{$dataDesa->nama_kepala}}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">Nama Desa</th>
+                        <td>{{$dataDesa->no_telp_desa}}</td>
+                    </tr>
+                </table>
             </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <a href="{{route('desa.index')}}" class="btn btn-danger ">
+                        <i class="fas fa-arrow-left me-2"></i>Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

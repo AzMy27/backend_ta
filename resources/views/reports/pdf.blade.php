@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan - {{ $report->title }}</title>
+    <title>Laporan - {{ $report->dai->nama }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,6 +45,7 @@
 <body>
     <div class="header">
         <h2>Laporan Kegiatan</h2>
+        <p>Dai: {{ $report->dai->nama }}</p>
         <p>Tanggal: {{ date('d/m/Y') }}</p>
     </div>
 
@@ -69,13 +70,16 @@
 
     <div class="image-container">
         <h3>Dokumentasi Kegiatan</h3>
+        <br>
+        <br>
+        <br>
         @foreach($images as $image)
             <img src="{{ public_path('storage/'.$image) }}" alt="Dokumentasi">
         @endforeach
     </div>
 
     <div class="footer">
-        <p>Dokumen ini digenerate pada {{ date('d/m/Y H:i:s') }}</p>
+        <p>Dokumen ini dibuat pada {{ date('d/m/Y H:i:s') }}</p>
     </div>
 </body>
 </html>

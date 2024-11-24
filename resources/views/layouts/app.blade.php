@@ -7,7 +7,6 @@
             <li class="breadcrumb-item active">{{$description ?? 'Unset Yet'}}</li>
         </ol>
     @yield('content')
-
 </main>
 
 @include('layouts.footer')

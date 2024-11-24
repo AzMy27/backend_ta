@@ -61,6 +61,6 @@ class ReportController extends Controller
             'images' => json_decode($report->images, true)
         ]);
         
-        return $pdf->download('laporan-'.$report->title.'.pdf');
+        return $pdf->download('laporan-'.$report->dai->nama.'.pdf');
     }
 }

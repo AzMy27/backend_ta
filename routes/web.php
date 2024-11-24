@@ -46,6 +46,6 @@ Route::controller(ReportController::class)->middleware('auth')->group(function()
     Route::get('/admin/report/{laporan}/show', 'show')->name('reports.show');
     Route::put('/admin/report/{laporan}/edit', 'update')->name('reports.update');
     Route::delete('/admin/report/{laporan}/destroy', 'destroy')->name('reports.destroy');
+    Route::get('/reports/{id}/download',  'downloadPDF')->name('reports.download');
 });
 
-Route::get('/reports/{id}/download', [ReportController::class, 'downloadPDF'])->name('reports.download');
