@@ -8,10 +8,6 @@
             </a>
             @if (Auth::user()->level == 'kecamatan')
             <div class="sb-sidenav-menu-heading">Data</div>
-            <a class="nav-link" href="{{route('reports.index')}}">
-                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                Laporan
-            </a>
             <a class="nav-link" href="{{route('desa.index')}}">
                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                 Daftar Desa
@@ -20,17 +16,21 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                 Daftar Dai
             </a>
+            <a class="nav-link" href="{{route('reports.index')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                Laporan
+            </a>
             @endif
             
             @if (Auth::user()->level == 'desa')
             <div class="sb-sidenav-menu-heading">Data</div>
-            <a class="nav-link" href="{{route('report.index')}}">
-                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                Laporan
-            </a>
             <a class="nav-link" href="{{route('dai.index')}}">
                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                 Daftar Dai
+            </a>
+            <a class="nav-link" href="{{route('reports.index')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                Laporan
             </a>
             @endif    
         </div>

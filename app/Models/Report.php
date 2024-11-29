@@ -12,6 +12,7 @@ class Report extends Model
         'date',
         'description',
         'images',
+        'coordinate_point',
         'dai_id',
         'koreksi_desa',
         'validasi_desa',

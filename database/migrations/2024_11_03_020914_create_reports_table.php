@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->text('description');
             $table->text('images');
+            $table->text('coordinate_point');
             $table->foreignId('dai_id');
             $table->text('koreksi_desa');
             $table->enum('validasi_desa',['diterima','ditolak']);

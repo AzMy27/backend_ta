@@ -14,18 +14,17 @@ class UserController extends Controller
     public function store(Request $request) {
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'level' => 'required'
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|confirmed|min:8',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Hash the password
-            'level' => $request->level,
+            'level' => 'kecamatan',
         ]);
 
-        return redirect()->route('dashboard.adminkab')->with('success', 'Registration successful!');
+        return redirect()->route('admin.dashboard')->with('success', 'Registration successful!');
     }
 }

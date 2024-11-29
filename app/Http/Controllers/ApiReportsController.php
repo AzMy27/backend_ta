@@ -22,11 +22,12 @@ class ApiReportsController extends Controller
             $a['title'] = $report->title;
             $a['place'] = $report->place;
             $a['date'] = $report->date;
-            $a['description'] = $report->description;
+            $a['description'] = $report->description ?? '';
+            $a['coordinate_point'] = $report->coordinate_point ?? '';
             $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;
-            $a['koreksi_desa'] = $report->koreksi_desa;
+            $a['koreksi_desa'] = $report->koreksi_desa ?? '';
             $a['validasi_kecamatan'] = $report->validasi_kecamatan==null ? 'Belum divalidasi ' : $report->validasi_kecamatan;
-            $a['koreksi_kecamatan'] = $report->koreksi_kecamatan;
+            $a['koreksi_kecamatan'] = $report->koreksi_kecamatan ?? '';
             $a['images'] = [];
             foreach(json_decode($report->images,true) as $image) {
                 $a['images'][]= asset('storage/'.$image);
@@ -63,6 +64,7 @@ class ApiReportsController extends Controller
             'date' => 'required|date',
             'description' => 'required|string',
             'images.*' => 'required|image|mimes:jpeg,png,jpg', // Validate each image
+            'coordinate_point' => 'required|string',
         ]);
 
         try {
@@ -95,7 +97,8 @@ class ApiReportsController extends Controller
                 'place' => $validateData['place'],
                 'date' => $validateData['date'],
                 'description' => $validateData['description'],
-                'images' => json_encode($paths)
+                'images' => json_encode($paths),
+                'coordinate_point' => $validateData['coordinate_point'],
             ];
 
             // Create report
@@ -136,10 +139,11 @@ class ApiReportsController extends Controller
         $a['place'] = $report->place;
         $a['date'] = $report->date;
         $a['description'] = $report->description;
+        $a['coordinate_point'] = $report->coordinate_point ?? '';
         $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;
         $a['validasi_kecamatan'] = $report->validasi_kecamatan==null ? 'Belum divalidasi ' : $report->validasi_kecamatan;
-        $a['koreksi_kecamatan'] = $report->koreksi_kecamatan;
-        $a['koreksi_desa'] = $report->koreksi_desa;
+        $a['koreksi_desa'] = $report->koreksi_desa == null ? 'Belum dikoreksi' : $report->koreksi_desa;
+        $a['koreksi_kecamatan'] = $report->koreksi_kecamatan == null ? 'Belum dikoreksi' : $report->koreksi_kecamatan;
         $a['images'] = [];
         foreach(json_decode($report->images,true) as $image) {
             $a['images'][]= asset('storage/'.$image);

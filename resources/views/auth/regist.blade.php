@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Register - SB Admin</title>
+        <title>Register - Admin</title>
         <link href="{{url('css/styles.css')}}" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
@@ -36,10 +36,12 @@
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputLevel" type="text" placeholder="Level" name="level" />
-                                                <label for="inputLevel">Level</label>
+                                                <input class="form-control" id="inputPassword" type="password" placeholder="ulangi_password" name="password_confirmation" required/>
+                                                <label for="inputPassword">Ulangi Password</label>
                                             </div>
-                                     
+                                            @error('password_confirmation')
+                                                <strong class="text-danger">{{ $message }}</strong>
+                                            @enderror
                                             <button type="submit">Daftar</button>
                                         </form>                                     
                                     </div>

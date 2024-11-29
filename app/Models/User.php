@@ -49,13 +49,18 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-
+    public function isKecamatan(){
+        return $this->level =='kecamatan';
+    }
     public function isDai(){
         return $this->level == 'dai';
     }
-        public function isDesa(){
+    public function isDesa(){
         return $this->level == 'desa';
     }
+
+
+
     protected function casts(): array
     {
         return [

@@ -40,7 +40,10 @@
                                                     <img src="{{ asset('storage/'.$image) }}" 
                                                          alt="Foto Kegiatan" 
                                                          class="img-fluid rounded" 
-                                                         style="width: 100%; height: 200px; object-fit: cover;">
+                                                         style="width: 100%; height: 200px; object-fit: cover; cursor: pointer;"
+                                                         data-bs-toggle="modal" 
+                                                         data-bs-target="#imageModal"
+                                                         onclick="showImage('{{asset('storage/'.$image) }}')">
                                                 </div>
                                             @endforeach
                                         </div>
@@ -61,14 +64,78 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{route('reports.index')}}" class="btn btn-danger">
+                    <div class="d-flex justify-content-between align-items-center">
+                        {{-- Tombol Kembali --}}
+                        <a href="{{route('reports.index')}}" class="btn btn-primary">
                             <i class="fas fa-arrow-left me-2"></i>Kembali
                         </a>
+                        
+                        {{-- Tombol Validasi --}}
+                        <div>
+                            {{-- Desa --}}
+                            @if (Auth::user()->isDesa() && $reports->validasi_desa == null)
+                                <form action="{{route('reports.desa.approve',$reports->id)}}" method="POST" style="display: inline-block;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menerima laporan ini?')">
+                                        <i class="fas fa-check me-2"></i>Terima
+                                    </button>
+                                </form>
+                                <form action="{{route('reports.desa.reject',$reports->id)}}" method="post" style="display: inline-block;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak laporan ini?')">
+                                        <i class="fas fa-times me-2"></i>Tolak
+                                    </button>
+                                </form>
+                            @endif
+                
+                            {{-- Kecamatan --}}
+                            @if (Auth::user()->isKecamatan() && $reports->validasi_kecamatan == null)
+                                @if ($canValidateKecamatan)
+                                    <form action="{{route('reports.kecamatan.approve',$reports->id)}}" method="POST" style="display: inline-block;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menerima laporan ini?')">
+                                            <i class="fas fa-check me-2"></i>Terima
+                                        </button>
+                                    </form>
+                                    <form action="{{route('reports.kecamatan.reject',$reports->id)}}" method="post" style="display: inline-block;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak laporan ini?')">
+                                            <i class="fas fa-times me-2"></i>Tolak
+                                        </button>
+                                    </form>
+                                @else
+                                    <div class="alert alert-warning" role="alert">
+                                        Laporan belum disetujui oleh Desa
+                                    </div>
+                                @endif
+                            @endif
+                        </div>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
 </div>
 @endsection
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Foto Kegiatan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Foto Kegiatan" class="img-fluid">
+                <p>Gambar dikirim pada: {{$reports->created_at}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showImage(imageUrl) {
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = imageUrl;
+    }
+</script>
