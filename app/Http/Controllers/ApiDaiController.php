@@ -3,58 +3,102 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use app\Model\Dai;
+use App\Models\Dai;
+use Illuminate\Support\Facades\Auth; 
+
 
 class ApiDaiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        try{
-            $daiAPI = Dai::findOrFail($id);
 
-            return repsonse()->json([
-                "status"=>"success",
-                "data"=>$daiAPI
-            ],200);
-        }catch(\Exception $e){
+    public function show()
+    {
+        try {
+            $dai = Auth::user()->dai;
+
+            if (!$dai) {
+                return response()->json(['status' => 'error', 'message' => 'Dai not found'], 404);
+            }
+            $data = [
+                'nik' => $dai->nik,
+                'nama' => $dai->nama,   
+                'no_hp' => $dai->no_hp,
+                'alamat' => $dai->alamat,
+                'tempat_lahir' => $dai->tempat_lahir,
+                'tanggal_lahir' => $dai->tanggal_lahir,
+                'pendidikan_akhir' => $dai->pendidikan_akhir,
+                'status_kawin' => $dai->status_kawin,
+                'foto_dai' => $dai->foto_dai ? asset('storage/' . $dai->foto_dai) : null,
+            ];
+
             return response()->json([
-                "status"=>"error",
-                "message"=>"Data not found"
-            ],404);
+                'status' => 'success', 
+                'data' => $data,
+                ],200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'error' => [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                ]
+            ], 404);
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $daiId)
     {
-        //
+        try{
+            $dai = Auth::user()->dai;
+
+            if (!$dai) {
+                return response()->json(['status' => 'error', 'message' => 'Dai not found'], 404);
+            }
+            $validateData=$request->validate([
+                'nik'=>'required|unique:dais,nik,{$daiId}',
+                'nama'=>'required',
+                'no_hp'=>'required',
+                'alamat'=>'required',
+                'tempat_lahir'=>'required',
+                'tanggal_lahir'=>'required',
+                'pendidikan_akhir'=>'required',
+                'status_kawin'=>'required',
+                'foto_dai'=>'nullable|image',
+            ]);
+
+            $daiData = Dai::findOrfail($dai);
+
+            if ($request->hasFile('foto_dai')) {
+                if ($daiData->foto_dai) {
+                    \Storage::disk('public')->delete($daiData->foto_dai);
+                }
+                $validatedData['foto_dai'] = $request->file('foto_dai')->store('foto_dai', 'public');
+            }
+            $daiData->update($validatedData);
+            return response()->json(['status' => 'success', 'message' => 'Data Dai berhasil diperbarui', 'data' => $daiData],200);
+        }catch(\Exception $e){
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'error' => [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                ]
+            ], 404);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(string $dai)
     {
         //
     }

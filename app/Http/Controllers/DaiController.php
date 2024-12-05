@@ -28,17 +28,11 @@ class DaiController extends Controller
     public function create()
     {
         $user = Auth::user();
-
-        // Jika user adalah Kecamatan, ambil semua desa yang ada di kecamatan tersebut
         if ($user->level == 'kecamatan') {
-            // Ambil desa yang terkait dengan kecamatan user
             $desaList = Desa::where('kecamatan_id', $user->kecamatan->id)->get();
         } else {
-            // Jika user adalah Desa, ambil desa yang terkait dengan user tersebut
             $desaList = [$user->desa];
         }
-
-        // Kirim $desaList ke view
         return view('dai.create', compact('desaList'));
     }
 
@@ -99,6 +93,18 @@ class DaiController extends Controller
      */
     public function show(Dai $dai)
     {
+        $user = Auth::user();
+        if($user->level =='kecamatan'){
+            $allowedDesaId = Desa::where('kecamatan_id',$user->kecamatan->id)->pluck('id');
+            if(!$allowedDesaId->contains($dai->desa_id)){
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk melihat data DAI dari desa lain.');
+            }
+        }
+        else{
+            if($dai->desa_id !== $user->desa->id){
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk melihat data DAI dari desa lain.');
+            }
+        }
         return view('dai.show',['data'=>$dai]);
     }
 
@@ -107,6 +113,18 @@ class DaiController extends Controller
      */
     public function edit(Dai $dai)
     {
+        $user = Auth::user();
+        if ($user->level == 'kecamatan') {
+            $allowedDesaIds = Desa::where('kecamatan_id', $user->kecamatan->id)->pluck('id');
+            if (!$allowedDesaIds->contains($dai->desa_id)) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk mengedit data DAI dari desa lain.');
+            }
+        } 
+        else {
+            if ($dai->desa_id !== $user->desa->id) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk mengedit data DAI dari desa lain.');
+            }
+        }
         return view('dai.edit',['data'=>$dai]);
     }
 
@@ -115,6 +133,18 @@ class DaiController extends Controller
      */
     public function update(Request $request, Dai $dai)
     {
+        $user = Auth::user();
+        if ($user->level == 'kecamatan') {
+            $allowedDesaIds = Desa::where('kecamatan_id', $user->kecamatan->id)->pluck('id');
+            if (!$allowedDesaIds->contains($dai->desa_id)) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk mengubah data DAI dari desa lain.');
+            }
+        } 
+        else {
+            if ($dai->desa_id !== $user->desa->id) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk mengubah data DAI dari desa lain.');
+            }
+        }
         $data=$request->validate([
             'nik'=>'required',
             'nama'=>'required',
@@ -150,6 +180,19 @@ class DaiController extends Controller
      */
     public function destroy(Dai $dai)
     {
+        $user = Auth::user();
+        if ($user->level == 'kecamatan') {
+            $allowedDesaIds = Desa::where('kecamatan_id', $user->kecamatan->id)->pluck('id');
+            if (!$allowedDesaIds->contains($dai->desa_id)) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk menghapus data DAI dari desa lain.');
+            }
+        } 
+        else {
+            if ($dai->desa_id !== $user->desa->id) {
+                return redirect()->route('dai.index')->with('error', 'Anda tidak memiliki akses untuk menghapus data DAI dari desa lain.');
+            }
+        }
+
         if($dai->foto_dai && Storage::disk('public')->exists($dai->foto_dai)){
             Storage::disk('public')->delete($dai->foto_dai);
         }

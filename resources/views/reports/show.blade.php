@@ -23,6 +23,10 @@
                                 <td>{{$reports->place}}</td>
                             </tr>
                             <tr>
+                                <th class="bg-light">Koordinat</th>
+                                <td>{{$reports->coordinate_point}}</td>
+                            </tr>
+                            <tr>
                                 <th class="bg-light">Tanggal</th>
                                 <td>{{$reports->date}}</td>
                             </tr>

@@ -16,15 +16,31 @@ class ReportController extends Controller
             $reports = Report::withWhereHas('dai', function($query)use($user){
                 $query->where('desa_id', $user->desa->id);
             })->get();
+        }elseif($user->isKecamatan()){
+            $reports = Report::withWhereHas('dai.desa', function($query) use($user){
+                $query->where('kecamatan_id', $user->kecamatan->id);
+            })->get();            
         }else{
-            
-        $reports = Report::get();
+            $reports = Report::get();
         }
         return view('reports.index',['reports'=>$reports]);        
     }
 
     public function show(string $id){
+        $user = Auth::user();
         $reports = Report::findOrFail($id);
+
+        if ($user->isDesa()) {
+            if ($reports->dai->desa_id !== $user->desa->id) {
+                return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk melihat laporan dari desa lain.');
+            }
+        }
+
+        if ($user->isKecamatan()) {
+            if ($report->dai->desa->kecamatan_id !== $user->kecamatan->id) {
+                return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk melihat laporan dari kecamatan lain.');
+            }
+        }
         return view('reports.show',[
             'reports'=>$reports,
             'canValidateKecamatan' => $this->kecamatanCanValidate($reports)
@@ -50,7 +66,20 @@ class ReportController extends Controller
     }
 
     public function downloadPDF(string $id){
+        $user = Auth::user();
         $report = Report::findOrFail($id);
+
+            if ($user->isDesa()) {
+                if ($report->dai->desa_id !== $user->desa->id) {
+                    return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk mengunduh laporan dari desa lain.');
+                }
+            }
+
+            if ($user->isKecamatan()) {
+                if ($report->dai->desa->kecamatan_id !== $user->kecamatan->id) {
+                    return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk mengunduh laporan dari kecamatan lain.');
+                }
+            }
         
         $pdf = PDF::loadView('reports.pdf', [
             'report' => $report,
@@ -59,7 +88,7 @@ class ReportController extends Controller
         
         return $pdf->download('laporan - '.$report->dai->nama.'.pdf');
     }
-
+    // Desa
     public function desaApprove(Request $request, $id){
         $user = Auth::user();
         $report = Report::findOrFail($id);
@@ -73,7 +102,6 @@ class ReportController extends Controller
 
     }
 
-    // Desa
     public function desaReject(Request $request, $id){
         $user = Auth::user();
         $report = Report::findOrFail($id);
@@ -130,6 +158,8 @@ class ReportController extends Controller
     public function desaCommentPost(Request $request, $id){
         $request->validate([
             'comment'=>'required|string'
+        ],[
+            'comment.required'=> 'Alasan harus diisi'
         ]);
         $report = Report::findOrFail($id);
         $report->koreksi_desa = $request->comment;
@@ -146,6 +176,8 @@ class ReportController extends Controller
     public function kecamatanCommentPost(Request $request, $id){
         $request->validate([
             'comment' => 'required|string',
+        ],[
+            'comment.required'=> 'Alasan harus diisi'
         ]);
         $report = Report::findOrFail($id);
         $report->koreksi_kecamatan = $request->comment;

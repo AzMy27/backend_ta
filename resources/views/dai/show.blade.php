@@ -38,7 +38,7 @@
             </div>  
             <div class="card-footer">
                 <div class="d-flex justify-content-between">
-                    <a href="{{route('desa.index')}}" class="btn btn-primary ">
+                    <a href="{{route('dai.index')}}" class="btn btn-primary ">
                         <i class="fas fa-arrow-left me-2"></i>Kembali
                     </a>
                 </div>

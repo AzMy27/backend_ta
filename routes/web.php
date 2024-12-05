@@ -51,7 +51,7 @@ Route::controller(ReportController::class)->middleware('auth')->group(function()
     Route::post('admin/report/{id}/reject/desa', 'desaReject')->name('reports.desa.reject');
     Route::get('admin/report/{id}/comment/desa','desaCommentGet')->name('reports.desa.comment.get');
     Route::post('admin/report/{id}/comment/desa','desaCommentPost')->name('reports.desa.comment.store');
-    // Kecamatanstore
+    // Kecamatan
     Route::post('admin/report/{id}/approve/kecamatan', 'kecamatanApprove')->name('reports.kecamatan.approve');
     Route::post('admin/report/{id}/reject/kecamatan', 'kecamatanReject')->name('reports.kecamatan.reject');
     Route::get('admin/report/{id}/comment/kecamatan','kecamatanCommentGet')->name('reports.kecamatan.comment.get');

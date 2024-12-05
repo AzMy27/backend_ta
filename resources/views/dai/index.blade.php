@@ -7,6 +7,11 @@
         <a href="{{route('dai.create')}}" class="btn btn-primary btn-sm float-end">Tambah</a>
     </div>
     <div class="card-body">
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
         <table class="table table-striped table-bordered" id="datatablesSimple">
             <thead>
                 <tr>

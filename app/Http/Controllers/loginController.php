@@ -11,7 +11,13 @@ class loginController extends Controller
     public function index()
     {
         if(Auth::check()){
-            return redirect()->route('admin.dashboard');
+            $user = Auth::user();
+            if($user->isKecamatan()){
+                return redirect()->route('admin.dashboard');
+            }elseif($user->isDesa()){
+                return redirect()->route('admin.dashboard');
+            }
+            Auth::logout();
         }
         return view('auth.login');
     }
@@ -19,22 +25,25 @@ class loginController extends Controller
     public function submit(Request $request)    
     {
         $request->validate([
-            'email'=>'required',
+            'email'=>'required|email',
             'password'=>'required',
         ]);
 
-        if(Auth::attempt([
-            'email' => $request->email,
-            'password' => $request->password
-        ])){
+        $credentials = $request->only('email','password');
+
+        $credentials['level'] = ['kecamatan','desa'];
+
+        if(Auth::attempt($credentials)){
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+            $user = Auth::user();
+            if($user->isKecamatan()){
+                return redirect()->route('admin.dashboard');
+            }elseif($user->isDesa()){
+                return redirect()->route('admin.dashboard');
+            }
         }else{
-            return back()->with('warning','gagal username password tidak ditemukan');
+            return back()->with('warning','Login gagal username dan password tidak ditemukan');
         }
-        // return redirect()->back()->withErrors([
-        //     'Invalid email or password'
-        // ]);
     }
 
     public function logout()

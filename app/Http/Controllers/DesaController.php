@@ -10,26 +10,22 @@ use Illuminate\Support\Facades\Auth;
 
 class DesaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $dataDesa= Desa::get();
+        $kecamatan = Auth::user()->kecamatan;
+        $dataDesa = $kecamatan->desa;
+
         return view('desa.index',['dataDesa'=>$dataDesa]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
+        if ($desa->kecamatan_id !== Auth::user()->kecamatan_id) {
+            abort(403, 'Unauthorized access');
+        }
         return view('desa.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $dataDesa=$request->validate([
@@ -47,19 +43,19 @@ class DesaController extends Controller
         return redirect()->route('desa.index')->with('success','Data Desa Berhasil Ditambah');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Desa $desa)
     {
+        if ($desa->kecamatan_id !== Auth::user()->kecamatan_id) {
+            abort(403, 'Unauthorized access');
+        }
         return view('desa.show',['dataDesa'=>$desa]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Desa $desa)
     {
+        if ($desa->kecamatan_id !== Auth::user()->kecamatan_id) {
+            abort(403, 'Unauthorized access');
+        }
         return view('desa.edit',['dataDesa'=>$desa]);
     }
 
@@ -76,6 +72,10 @@ class DesaController extends Controller
      */
     public function destroy(Desa $desa)
     {
-        //
+        if ($desa->kecamatan_id !== Auth::user()->kecamatan_id) {
+            abort(403, 'Unauthorized access');
+        }
+        $desa->delete();
+        return redirect()->route('desa.index')->with('success', 'Data Desa Berhasil Dihapus');
     }
 }

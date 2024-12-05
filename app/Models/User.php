@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'level',
+        'token_firebase',
     ];
     public function kecamatan(){
         return $this->hasOne(Kecamatan::class);

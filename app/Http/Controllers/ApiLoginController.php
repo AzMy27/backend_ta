@@ -27,6 +27,13 @@ class ApiLoginController extends Controller
             }
 
             $user = Auth::user();
+            
+            if($user->level !=='dai'){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Anda bukan pengguna dai',
+                ],403);
+            }
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
