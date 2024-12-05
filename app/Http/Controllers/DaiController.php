@@ -69,7 +69,6 @@ class DaiController extends Controller
             $data['desa_id']=$user->desa->id;
         }
         $dataDai=Dai::create($data);
-        // $dataDai = Auth::user()->desa->dai()->create($data);
 
         if($dataDai){
             if(!$dataDai->user()->exists()){
