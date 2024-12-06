@@ -56,7 +56,7 @@ class ApiDaiController extends Controller
         }
     }
 
-    public function update(Request $request, string $daiId)
+    public function update()
     {
         try{
             $dai = Auth::user()->dai;
@@ -77,7 +77,6 @@ class ApiDaiController extends Controller
             ]);
 
             $daiData = Dai::findOrfail($dai);
-
             if ($request->hasFile('foto_dai')) {
                 if ($daiData->foto_dai) {
                     \Storage::disk('public')->delete($daiData->foto_dai);

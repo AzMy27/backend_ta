@@ -82,7 +82,6 @@
                                         <label for="">Gambar</label>
                                         <input type="file" name="foto_dai" class="form-control" >
                                     </div>
-
                                     <br>
                                     <div class="form-group">
                                         <label for="">Email</label>
@@ -103,8 +102,6 @@
                                         <button class="btn-primary btn btn-sm float-end">Tambah</button>
                                     </div>
                                 </form>
-
-
                             </div>
                         </div>
                     </div>

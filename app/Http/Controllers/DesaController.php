@@ -20,9 +20,6 @@ class DesaController extends Controller
 
     public function create()
     {
-        if ($desa->kecamatan_id !== Auth::user()->kecamatan_id) {
-            abort(403, 'Unauthorized access');
-        }
         return view('desa.create');
     }
 

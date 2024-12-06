@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('level');
             $table->string('image');
-            $table->string('token_firebase');
+            $table->string('token_firebase')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

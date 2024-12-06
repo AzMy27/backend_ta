@@ -67,7 +67,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="btn-group">
                             <a href="{{route('dai.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
                             <a href="{{route('dai.edit',$item->id)}}" class="btn btn-sm btn-warning">Edit</a>

@@ -72,4 +72,20 @@ class ApiLoginController extends Controller
             ], 500);
         }
     }
+    
+    public function saveFirebaseToken(Request $request)
+    {
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $user->update(['token_firebase' => $request->token]);
+
+        return response()->json(['message' => 'Token saved successfully']);
+    }
 }

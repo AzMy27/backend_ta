@@ -36,7 +36,6 @@ class DaiController extends Controller
         return view('dai.create', compact('desaList'));
     }
 
-
     public function store(Request $request)
     {
         $data=$request->validate([

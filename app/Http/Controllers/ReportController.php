@@ -88,6 +88,51 @@ class ReportController extends Controller
         
         return $pdf->download('laporan - '.$report->dai->nama.'.pdf');
     }
+
+    private function sendDaiNotification($report, $status, $level, $comment = null){
+        $dai = User::find($report->dai->user_id);
+        if ($dai && $dai->token_firebase) {
+            $title = "Laporan $status oleh $level";
+            $body = $comment ? "Alasan: $comment" : "Laporan anda telah $status";
+            $data = [
+                'title' => $title,
+                'body' => $body,
+                'report_id' => $report->id
+            ];
+            $this->sendFCM($dai->token_firebase, $data);
+        }
+    }
+
+    private function sendFCM($token, $data) {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $serverKey = config('services.firebase.server_key');
+        
+        $fields = [
+            'to' => $token,
+            'notification' => [
+                'title' => $data['title'],
+                'body' => $data['body']
+            ],
+            'data' => $data
+        ];
+
+        $headers = [
+            'Authorization: key=' . $serverKey,
+            'Content-Type: application/json'
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        
+        curl_exec($ch);
+        curl_close($ch);
+    }
     // Desa
     public function desaApprove(Request $request, $id){
         $user = Auth::user();
@@ -95,6 +140,7 @@ class ReportController extends Controller
         if($user->isDesa() && $user->desa->id == $report->dai->desa_id){
             $report->validasi_desa = 'diterima';
             $report->save();
+            $this->sendDaiNotification($report, 'diterima', 'Desa');
             return redirect()->route('reports.index')->with('success', 'Laporan berhasil diterima.');
         }
 
@@ -129,6 +175,7 @@ class ReportController extends Controller
         if($user->isKecamatan() && $user->kecamatan->id == $report->dai->desa->kecamatan_id){
             $report->validasi_kecamatan = 'diterima';
             $report->save();
+            $this->sendDaiNotification($report, 'diterima', 'Kecamatan');
             return redirect()->route('reports.index')->with('success','Laporan berhasil diterima');
         }
         return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang untuk aksi ini.');
@@ -164,7 +211,7 @@ class ReportController extends Controller
         $report = Report::findOrFail($id);
         $report->koreksi_desa = $request->comment;
         $report->save();
-
+        $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
         return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
     }
 
@@ -182,6 +229,7 @@ class ReportController extends Controller
         $report = Report::findOrFail($id);
         $report->koreksi_kecamatan = $request->comment;
         $report->save();
+        $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
         return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
     }
 }
