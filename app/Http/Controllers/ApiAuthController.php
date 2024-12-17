@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; 
-use Illuminate\Validation\ValidationException; 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
-class ApiLoginController extends Controller
+class ApiAuthController extends Controller
 {
-
     public function loginAPI(Request $request)
     {
         try {
@@ -18,7 +18,6 @@ class ApiLoginController extends Controller
             ]);
 
             $credentials = $request->only(['email', 'password']);
-
             if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'status' => 'error',
@@ -27,7 +26,6 @@ class ApiLoginController extends Controller
             }
 
             $user = Auth::user();
-            
             if($user->level !=='dai'){
                 return response()->json([
                     'status' => 'error',
@@ -35,7 +33,6 @@ class ApiLoginController extends Controller
                 ],403);
             }
             $token = $user->createToken('auth_token')->plainTextToken;
-
             return response()->json([
                 'status' => 'success',
                 'token' => $token,
@@ -43,17 +40,48 @@ class ApiLoginController extends Controller
                 'user'=>[
                     'id'=>$user->id,
                     'name'=>$user->name,
-                    'image'=>$user->image,
-                    'email'=>$user->email ?? "email tidak ditemukan"
+                    'email'=>$user->email ?? ""
                 ]
             ]);
-
         } catch (ValidationException $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'current_password' => 'required',
+                'new_password' => 'required|min:8|confirmed'
+            ]);
+
+            $user = Auth::user();
+            
+            if (!Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Password lama salah'
+                ], 400);
+            }
+
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password berhasil diganti',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Password gagal diganti',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -71,21 +99,5 @@ class ApiLoginController extends Controller
                 'message' => 'An error occurred during logout'
             ], 500);
         }
-    }
-    
-    public function saveFirebaseToken(Request $request)
-    {
-        $request->validate([
-            'token' => 'required|string',
-        ]);
-
-        $user = Auth::user();
-        if (!$user) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        $user->update(['token_firebase' => $request->token]);
-
-        return response()->json(['message' => 'Token saved successfully']);
     }
 }

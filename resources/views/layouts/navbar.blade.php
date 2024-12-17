@@ -6,6 +6,15 @@
                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                 Dashboard
             </a>
+
+            @if (Auth::user()->level == 'admin')
+            <div class="sb-sidenav-menu-heading">Data</div>
+            <a class="nav-link" href="{{route('kecamatan.index')}}">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                Daftar Kecamatan
+            </a>
+            @endif
+
             @if (Auth::user()->level == 'kecamatan')
             <div class="sb-sidenav-menu-heading">Data</div>
             <a class="nav-link" href="{{route('desa.index')}}">

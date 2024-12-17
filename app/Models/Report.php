@@ -8,9 +8,12 @@ class Report extends Model
 {
     protected $fillable = [
         'title',
+        'type',
         'place',
         'date',
         'description',
+        'target',
+        'purpose',
         'images',
         'coordinate_point',
         'dai_id',

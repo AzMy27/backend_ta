@@ -10,11 +10,11 @@
                         <td>{{$dataDesa->nama_desa}}</td>
                     </tr>
                     <tr>
-                        <th class="bg-light">Nama Desa</th>
+                        <th class="bg-light">Kepala Desa</th>
                         <td>{{$dataDesa->nama_kepala}}</td>
                     </tr>
                     <tr>
-                        <th class="bg-light">Nama Desa</th>
+                        <th class="bg-light">No. Telp Desa</th>
                         <td>{{$dataDesa->no_telp_desa}}</td>
                     </tr>
                 </table>

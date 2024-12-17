@@ -9,17 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ApiDaiController extends Controller
 {
-    public function index()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-
     public function show()
     {
         try {
@@ -56,36 +45,35 @@ class ApiDaiController extends Controller
         }
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        try{
+        try {
             $dai = Auth::user()->dai;
-
             if (!$dai) {
                 return response()->json(['status' => 'error', 'message' => 'Dai not found'], 404);
             }
-            $validateData=$request->validate([
-                'nik'=>'required|unique:dais,nik,{$daiId}',
-                'nama'=>'required',
-                'no_hp'=>'required',
-                'alamat'=>'required',
-                'tempat_lahir'=>'required',
-                'tanggal_lahir'=>'required',
-                'pendidikan_akhir'=>'required',
-                'status_kawin'=>'required',
-                'foto_dai'=>'nullable|image',
+
+            $validateData = $request->validate([
+                'nama' => 'required',
+                'no_hp' => 'required',
+                'alamat' => 'required',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'pendidikan_akhir' => 'required',
+                'status_kawin' => 'required',
+                'foto_dai' => 'nullable|image',
             ]);
 
-            $daiData = Dai::findOrfail($dai);
             if ($request->hasFile('foto_dai')) {
-                if ($daiData->foto_dai) {
-                    \Storage::disk('public')->delete($daiData->foto_dai);
+                if ($dai->foto_dai) {
+                    \Storage::disk('public')->delete($dai->foto_dai);
                 }
-                $validatedData['foto_dai'] = $request->file('foto_dai')->store('foto_dai', 'public');
+                $validateData['foto_dai'] = $request->file('foto_dai')->store('foto_dai', 'public');
             }
-            $daiData->update($validatedData);
-            return response()->json(['status' => 'success', 'message' => 'Data Dai berhasil diperbarui', 'data' => $daiData],200);
-        }catch(\Exception $e){
+
+            $dai->update($validateData);
+            return response()->json(['status' => 'success', 'message' => 'Data Dai berhasil diperbarui', 'data' => $dai], 200);
+        } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
@@ -95,10 +83,5 @@ class ApiDaiController extends Controller
                 ]
             ], 404);
         }
-    }
-
-    public function destroy(string $dai)
-    {
-        //
     }
 }

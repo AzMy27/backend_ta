@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use PDF;
-
 
 class ReportController extends Controller
 {
@@ -37,7 +37,7 @@ class ReportController extends Controller
         }
 
         if ($user->isKecamatan()) {
-            if ($report->dai->desa->kecamatan_id !== $user->kecamatan->id) {
+            if ($reports->dai->desa->kecamatan_id !== $user->kecamatan->id) {
                 return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk melihat laporan dari kecamatan lain.');
             }
         }
@@ -45,24 +45,6 @@ class ReportController extends Controller
             'reports'=>$reports,
             'canValidateKecamatan' => $this->kecamatanCanValidate($reports)
         ]);
-    }
-
-
-    public function edit(string $id){
-        //
-    }
-
-
-    public function update(Request $request, string $id){
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id){
-        // $id->delete();
-        // return to_route('reports.index');
     }
 
     public function downloadPDF(string $id){
@@ -104,34 +86,52 @@ class ReportController extends Controller
     }
 
     private function sendFCM($token, $data) {
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $serverKey = config('services.firebase.server_key');
-        
-        $fields = [
-            'to' => $token,
-            'notification' => [
-                'title' => $data['title'],
-                'body' => $data['body']
-            ],
-            'data' => $data
-        ];
+        try {
+            $url = 'https://fcm.googleapis.com/fcm/send';
+            $serverKey = config('services.firebase.server_key');
+            $fields = [
+                'to' => $token,
+                'notification' => [
+                    'title' => $data['title'],
+                    'body' => $data['body']
+                ],
+                'data' => [
+                    ...$data,
+                    'route' => '/notification_screen'
+                ]
+            ];
 
-        $headers = [
-            'Authorization: key=' . $serverKey,
-            'Content-Type: application/json'
-        ];
+            $headers = [
+                'Authorization: key=' . $serverKey,
+                'Content-Type: application/json'
+            ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        
-        curl_exec($ch);
-        curl_close($ch);
+            \Log::info('FCM Payload: ' . json_encode($fields));
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+            
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            \Log::info('FCM Response Code: ' . $httpCode);
+            \Log::info('FCM Response: ' . $response);
+
+            curl_close($ch);
+            if ($httpCode !== 200) {
+                \Log::error('FCM Notification failed: ' . $response);
+                \Log::error('HTTP Code: ' . $httpCode);
+                \Log::error('Token: ' . $token);
+                \Log::error('Data: ' . json_encode($data));
+            }
+        } catch (\Exception $e) {
+            \Log::error('FCM Sending Exception: ' . $e->getMessage());
+        }
     }
     // Desa
     public function desaApprove(Request $request, $id){
@@ -163,7 +163,6 @@ class ReportController extends Controller
         return $report->validasi_desa === 'diterima';
     }
 
-    // Kecamatan 
     public function kecamatanApprove(Request $request, $id){
         $user = Auth::user();
         $report = Report::findOrFail($id);

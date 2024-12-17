@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('type');
             $table->string('place');
             $table->date('date');
             $table->text('description');
+            $table->string('target');
+            $table->string('purpose');
             $table->text('images');
             $table->text('coordinate_point');
             $table->foreignId('dai_id');

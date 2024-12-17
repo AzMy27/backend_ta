@@ -40,6 +40,9 @@
             margin-top: 20px;
             font-size: 12px;
         }
+        .page-break {
+            page-break-after: always;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +58,18 @@
             <td>{{ $report->title }}</td>
         </tr>
         <tr>
+            <th>Tipe Kegiatan</th>
+            <td>{{ $report->type }}</td>
+        </tr>
+        <tr>
+            <th>Target</th>
+            <td>{{ $report->target }}</td>
+        </tr>
+        <tr>
+            <th>Tujuan</th>
+            <td>{{ $report->purpose }}</td>
+        </tr>
+        <tr>
             <th>Lokasi</th>
             <td>{{ $report->place }}</td>
         </tr>
@@ -68,14 +83,17 @@
         </tr>
     </table>
 
+    <div class="page-break"></div>
+
     <div class="image-container">
         <h3>Dokumentasi Kegiatan</h3>
-        <br>
-        <br>
-        <br>
-        @foreach($images as $image)
-            <img src="{{ public_path('storage/'.$image) }}" alt="Dokumentasi">
-        @endforeach
+        <div class="image-grid">
+            @foreach($images as $image)
+            <div class="image-wrapper">
+                <img src="{{ public_path('storage/'.$image) }}" alt="Dokumentasi">
+            </div>
+            @endforeach
+        </div>
     </div>
 
     <div class="footer">

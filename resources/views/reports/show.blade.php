@@ -19,16 +19,28 @@
                                 <td>{{$reports->title}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Lokasi</th>
-                                <td>{{$reports->place}}</td>
+                                <th class="bg-light" style="width: 30%;">Tipe Kegiatan</th>
+                                <td>{{$reports->type}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Koordinat</th>
-                                <td>{{$reports->coordinate_point}}</td>
+                                <th class="bg-light">Lokasi</th>
+                                <td>{{$reports->place}}</td>
+                            </tr>                            
+                            <tr>
+                                <th class="bg-light">Target</th>
+                                <td>{{$reports->target}}</td>
+                            </tr>                            
+                            <tr>
+                                <th class="bg-light">Tujuan</th>
+                                <td>{{$reports->purpose}}</td>
                             </tr>
                             <tr>
                                 <th class="bg-light">Tanggal</th>
                                 <td>{{$reports->date}}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Koordinat</th>
+                                <td>{{$reports->coordinate_point}}</td>
                             </tr>
                             <tr>
                                 <th class="bg-light">Deskripsi</th>
@@ -69,14 +81,10 @@
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
-                        {{-- Tombol Kembali --}}
                         <a href="{{route('reports.index')}}" class="btn btn-primary">
                             <i class="fas fa-arrow-left me-2"></i>Kembali
                         </a>
-                        
-                        {{-- Tombol Validasi --}}
                         <div>
-                            {{-- Desa --}}
                             @if (Auth::user()->isDesa() && $reports->validasi_desa == null)
                                 <form action="{{route('reports.desa.approve',$reports->id)}}" method="POST" style="display: inline-block;">
                                     @csrf
@@ -91,8 +99,6 @@
                                     </button>
                                 </form>
                             @endif
-                
-                            {{-- Kecamatan --}}
                             @if (Auth::user()->isKecamatan() && $reports->validasi_kecamatan == null)
                                 @if ($canValidateKecamatan)
                                     <form action="{{route('reports.kecamatan.approve',$reports->id)}}" method="POST" style="display: inline-block;">
@@ -131,7 +137,7 @@
             </div>
             <div class="modal-body text-center">
                 <img id="modalImage" src="" alt="Foto Kegiatan" class="img-fluid">
-                <p>Gambar dikirim pada: {{$reports->created_at}}</p>
+                <p>Gambar diambil pada: {{$reports->created_at}}</p>
             </div>
         </div>
     </div>

@@ -86,9 +86,6 @@ class DaiController extends Controller
         return to_route('dai.index')->with('success','Data Berhasil Ditambah');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Dai $dai)
     {
         $user = Auth::user();
@@ -106,9 +103,6 @@ class DaiController extends Controller
         return view('dai.show',['data'=>$dai]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Dai $dai)
     {
         $user = Auth::user();
@@ -173,9 +167,6 @@ class DaiController extends Controller
         return to_route('dai.index')->with('success', 'Data berhasil diperbarui');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Dai $dai)
     {
         $user = Auth::user();

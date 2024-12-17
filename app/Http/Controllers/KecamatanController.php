@@ -2,62 +2,68 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Kecamatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KecamatanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function onlyAdmin(){
+        $user = Auth::user();
+        if ($user->level != 'admin') {
+            return redirect()->route('admin.dashboard')->send();
+        }
+    }
+
     public function index()
     {
-        return view('desa.index');
+        $this->onlyAdmin();
+        $dataKecamatan = Kecamatan::get();
+        return view('kecamatan.index', ['dataKecamatan' => $dataKecamatan]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
-        //
+        $this->onlyAdmin();
+        return view('kecamatan.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $this->onlyAdmin();
+        $kecamatan = $request->validate([
+            'nama_kecamatan'=>'required',
+            'nama_koordinator'=>'required',
+            'no_telp_koordinator' => 'required',
+        ]);
+        $kecamatan['user_id'] = User::create([
+            'name' => $request->nama_koordinator,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'level' => 'kecamatan',
+        ])->id;
+        
+        Kecamatan::create($kecamatan);
+        return redirect()->route('kecamatan.index')->with('success', 'Data Kecamatan Berhasil Ditambah');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Kecamatan $kecamatan)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Kecamatan $kecamatan)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Kecamatan $kecamatan)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Kecamatan $kecamatan)
     {
         //

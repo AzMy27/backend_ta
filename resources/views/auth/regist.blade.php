@@ -27,8 +27,16 @@
                                                 <label for="inputName">Nama</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inputPassword" type="email" placeholder="email" name="email" />
-                                                <label for="inputPassword">Email</label>
+                                                <input class="form-control" id="inputkecamatan" type="text" placeholder="Masukkan Nama Kecamatan" name="nama_kecamatan" />
+                                                <label for="inputKecamatan">Nama Kecamatan</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="inputTelepon" type="text" placeholder="Masukkan No. Telepon" name="telepon" />
+                                                <label for="inputTelepon">No. Telepon</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input class="form-control" id="inputEmail" type="email" placeholder="email" name="email" />
+                                                <label for="inputEmail">Email</label>
                                             </div>
                                      
                                             <div class="form-floating mb-3">
@@ -42,7 +50,9 @@
                                             @error('password_confirmation')
                                                 <strong class="text-danger">{{ $message }}</strong>
                                             @enderror
-                                            <button type="submit">Daftar</button>
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary btn-block" type="submit">Daftar</button>
+                                            </div>
                                         </form>                                     
                                     </div>
                                 </div>

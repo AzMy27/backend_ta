@@ -19,9 +19,11 @@ class FCMTokenController extends Controller
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-        $user->update(['token_firebase' => $request->token]);
-
-        return response()->json(['message' => 'Token saved successfully']);
+        try {
+            $user->update(['token_firebase' => $request->token]);
+            return response()->json(['message' => 'Token saved successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to save token', 'error' => $e->getMessage()], 500);
+        }
     }
 }

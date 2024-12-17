@@ -8,10 +8,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ApiReportsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    
     public function index(Request $request)
     {
         try{
@@ -20,8 +16,11 @@ class ApiReportsController extends Controller
             foreach($data as $report) {
                 $a['id'] = $report->id;
                 $a['title'] = $report->title;
+                $a['type'] = $report->type;
                 $a['place'] = $report->place;
                 $a['date'] = $report->date;
+                $a['target'] = $report->target;
+                $a['purpose'] = $report->purpose;
                 $a['description'] = $report->description ?? '';
                 $a['coordinate_point'] = $report->coordinate_point ?? '';
                 $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;
@@ -34,7 +33,6 @@ class ApiReportsController extends Controller
                 }
                 $reports_data[] = $a;
             }        
-        // $data = Report::whereDaiId($user->dai->id)->get();
         return response()->json([
             'status'=>'201',
             'message'=>'Data Laporan berhasil diambil',
@@ -53,18 +51,18 @@ class ApiReportsController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validateData = $request->validate([
             'title' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
             'place' => 'required|string|max:255',
             'date' => 'required|date',
             'description' => 'required|string',
             'images.*' => 'required|image|mimes:jpeg,png,jpg',
             'coordinate_point' => 'required|string',
+            'target' => 'required|string|max:255',
+            'purpose' => 'required|string|max:255',
         ]);
 
         try {
@@ -87,11 +85,14 @@ class ApiReportsController extends Controller
 
             $reportData = [
                 'title' => $validateData['title'],
+                'type' => $validateData['type'],
                 'place' => $validateData['place'],
                 'date' => $validateData['date'],
                 'description' => $validateData['description'],
                 'images' => json_encode($paths),
                 'coordinate_point' => $validateData['coordinate_point'],
+                'target' => $validateData['target'],
+                'purpose' => $validateData['purpose'],
             ];
             $report = $request->user()->dai->reports()->create($reportData);
 
@@ -119,17 +120,17 @@ class ApiReportsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Report $report)
     {
         try{
             $a['title'] = $report->title;
+            $a['type'] = $report->type;
             $a['place'] = $report->place;
             $a['date'] = $report->date;
             $a['description'] = $report->description;
             $a['coordinate_point'] = $report->coordinate_point ?? '';
+            $a['target'] = $report->target;
+            $a['purpose'] = $report->purpose;
             $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;
             $a['validasi_kecamatan'] = $report->validasi_kecamatan==null ? 'Belum divalidasi ' : $report->validasi_kecamatan;
             $a['koreksi_desa'] = $report->koreksi_desa == null ? 'Belum dikoreksi' : $report->koreksi_desa;
@@ -152,9 +153,6 @@ class ApiReportsController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Report $report)
     {
         if ($request->user()->dai->id !== $report->dai_id) {
@@ -173,11 +171,14 @@ class ApiReportsController extends Controller
 
         $validateData = $request->validate([
             'title' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
             'place' => 'required|string|max:255',
             'date' => 'required|date',
             'description' => 'required|string',
             'images.*' => 'image|mimes:jpeg,png,jpg',
             'coordinate_point' => 'required|string',
+            'target' => 'required|string|max:255',
+            'purpose' => 'required|string|max:255',
         ]);
 
         try {
@@ -200,10 +201,13 @@ class ApiReportsController extends Controller
 
             $reportData = [
                 'title' => $validateData['title'],
+                'type' => $validateData['type'],
                 'place' => $validateData['place'],
                 'date' => $validateData['date'],
                 'description' => $validateData['description'],
                 'coordinate_point' => $validateData['coordinate_point'],
+                'target' => $validateData['target'],
+                'purpose' => $validateData['purpose'],
                 'images' => json_encode($paths),
                 
                 'validasi_desa' => null,

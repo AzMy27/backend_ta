@@ -10,7 +10,8 @@ class Desa extends Model
         'nama_desa',
         'nama_kepala',
         'no_telp_desa',
-        'user_id'
+        'user_id',
+        'kecamatan_id',
     ];
     public function kecamatan(){
         return $this->belongsTo(Kecamatan::class);
