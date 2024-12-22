@@ -21,7 +21,7 @@ class ApiAuthController extends Controller
             if (!Auth::attempt($credentials)) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Invalid credentials'
+                    'message' => 'Email atau password salah'
                 ], 401);
             }
 
@@ -32,7 +32,8 @@ class ApiAuthController extends Controller
                     'message' => 'Anda bukan pengguna dai',
                 ],403);
             }
-            $token = $user->createToken('auth_token')->plainTextToken;
+
+            $token = $user->createToken('auth_token', ['*'], now()->addDays(7))->plainTextToken;
             return response()->json([
                 'status' => 'success',
                 'token' => $token,

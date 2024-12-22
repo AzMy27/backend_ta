@@ -43,9 +43,6 @@ class User extends Authenticatable
     public function isDesa(){
         return $this->level == 'desa';
     }
-
-
-
     protected function casts(): array
     {
         return [

@@ -120,9 +120,6 @@ class DaiController extends Controller
         return view('dai.edit',['data'=>$dai]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Dai $dai)
     {
         $user = Auth::user();
@@ -160,11 +157,11 @@ class DaiController extends Controller
 
         if ($dai->user) {
             $dai->user->update([
-                'image' => $data['foto_dai'] ?? $dai->foto_dai, // sinkronkan dengan foto_dai
+                'image' => $data['foto_dai'] ?? $dai->foto_dai,
             ]);
         }
 
-        return to_route('dai.index')->with('success', 'Data berhasil diperbarui');
+        return to_route('dai.index')->with('success', 'Data dai berhasil diperbarui');
     }
 
     public function destroy(Dai $dai)

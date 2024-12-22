@@ -68,7 +68,7 @@ class ReportController extends Controller
             'images' => json_decode($report->images, true)
         ]);
         
-        return $pdf->download('laporan - '.$report->dai->nama.'.pdf');
+        return $pdf->download('laporan - '.$report->title.'.pdf');
     }
 
     private function sendDaiNotification($report, $status, $level, $comment = null){

@@ -45,7 +45,6 @@ class DesaController extends Controller
 
     public function show(Desa $desa)
     {
-        // Cek apakah desa ini milik kecamatan yang sedang login
         if ($desa->kecamatan_id !== Auth::user()->kecamatan->id) {
             abort(403, 'Unauthorized action.');
         }
@@ -55,7 +54,6 @@ class DesaController extends Controller
 
     public function edit(Desa $desa)
     {
-        // Cek apakah desa ini milik kecamatan yang sedang login
         if ($desa->kecamatan_id !== Auth::user()->kecamatan->id) {
             abort(403, 'Unauthorized action.');
         }
@@ -65,7 +63,6 @@ class DesaController extends Controller
 
     public function update(Request $request, Desa $desa)
     {
-        // Cek apakah desa ini milik kecamatan yang sedang login
         if ($desa->kecamatan_id !== Auth::user()->kecamatan->id) {
             abort(403, 'Unauthorized action.');
         }
@@ -78,29 +75,15 @@ class DesaController extends Controller
 
         $desa->update($validatedData);
 
-        // Update user data jika ada perubahan
-        if ($request->filled('email') || $request->filled('password')) {
-            $userData = [];
-            if ($request->filled('email')) {
-                $userData['email'] = $request->email;
-            }
-            if ($request->filled('password')) {
-                $userData['password'] = bcrypt($request->password);
-            }
-            $desa->user->update($userData);
-        }
-
-        return redirect()->route('desa.index')->with('success', 'Data Desa Berhasil Diupdate');
+        return redirect()->route('desa.index')->with('success', 'Data desa berhasil diperbarui');
     }
 
     public function destroy(Desa $desa)
     {
-        // Cek apakah desa ini milik kecamatan yang sedang login
         if ($desa->kecamatan_id !== Auth::user()->kecamatan->id) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Hapus user terkait jika ada
         if ($desa->user) {
             $desa->user->delete();
         }
