@@ -231,4 +231,14 @@ class ReportController extends Controller
         $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
         return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
     }
+
+    public function weeklyRecap(Request $request)
+    {
+
+    }
+
+    public function monthlyRecap(Request $request)
+    {
+        
+    }
 }

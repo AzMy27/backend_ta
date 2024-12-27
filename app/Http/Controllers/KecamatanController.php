@@ -49,23 +49,4 @@ class KecamatanController extends Controller
         return redirect()->route('kecamatan.index')->with('success', 'Data Kecamatan Berhasil Ditambah');
     }
 
-    public function show(Kecamatan $kecamatan)
-    {
-        //
-    }
-
-    public function edit(Kecamatan $kecamatan)
-    {
-        //
-    }
-
-    public function update(Request $request, Kecamatan $kecamatan)
-    {
-        //
-    }
-
-    public function destroy(Kecamatan $kecamatan)
-    {
-        //
-    }
 }

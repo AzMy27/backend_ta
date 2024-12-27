@@ -84,7 +84,7 @@ class DesaController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if ($desa->user) {
+        if ($desa->user->exists()) {
             $desa->user->delete();
         }
         

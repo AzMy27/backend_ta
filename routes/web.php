@@ -18,6 +18,8 @@ Route::get('/admin/dashboard',[DashboardController::class,'index'])->middleware(
 Route::get('/login',[loginController::class,'index'])->name('login');
 Route::post('/login',[loginController::class,'submit'])->name('login.submit');
 Route::get('/logout',[loginController::class,'logout'])->middleware('auth')->name('logout');
+Route::get('/change_password',[loginController::class,'changePage'])->middleware('auth')->name('password.change');
+Route::post('/change_password',[loginController::class,'changePassword'])->middleware('auth')->name('password.confirmed');
 
 Route::controller(DaiController::class)->middleware('auth')->group(function(){
     Route::get('/admin/dai', 'index')->name('dai.index');

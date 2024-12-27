@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Kecamatan;
+use Illuminate\Support\Facades\Hash;
+
 
 class loginController extends Controller
 {
@@ -57,26 +59,24 @@ class loginController extends Controller
         return to_route('login');
     }
 
-    public function registerKecamatan(){
-        return view('auth.regist');
+    public function changePage()
+    {
+        return view('password.change');
     }
 
-    public function kecamatanStore(Request $request) {
-        $dataKecamatan = $request->validate([
-            'name_koordinator' => 'required',
-            'nama_kecamatan' => 'required',
-            'no_telp_koordinator' => 'required',
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'old_password'=>'required',
+            'new_password'=>'required|min:8|confirmed',
         ]);
+        $user = Auth::user();
 
-        $dataKecamatan['user_id'] = User::create([
-            'name' => $request->nama_koordinator,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'level' => 'kecamatan',
-        ])->id;
-
-        Auth::user()->kecamatan()->create($dataKecamatan);
-
-        return redirect()->route('admin.dashboard')->with('success', 'Registration successful!');
+        if(!Hash::check($request->old_password, $user->password)){
+            return back()->with('warning','Password lama tidak sesuai');
+        }
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+        return back()->with('success', 'Password berhasil diubah');
     }
 }

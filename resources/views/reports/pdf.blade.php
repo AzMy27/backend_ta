@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Laporan - {{ $report->dai->nama }}</title>
+    <title>Laporan - {{ $report->title }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;

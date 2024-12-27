@@ -70,10 +70,10 @@
                         <div class="btn-group">
                             <a href="{{route('dai.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
                             <a href="{{route('dai.edit',$item->id)}}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{route('dai.destroy',$item->id)}}" method="POST"
+                            <form action="{{route('dai.destroy',$item->id)}}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button href="#" class="btn btn-sm btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                             </form>
                         </div>
                     </td>

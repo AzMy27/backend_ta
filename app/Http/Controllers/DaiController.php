@@ -8,7 +8,6 @@ use App\Models\Dai;
 use App\Models\Desa;
 use Illuminate\Support\Facades\Auth;
 
-
 class DaiController extends Controller
 {
     public function index()
