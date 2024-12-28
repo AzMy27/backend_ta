@@ -63,5 +63,8 @@ Route::controller(ReportController::class)->middleware('auth')->group(function()
     Route::post('admin/report/{id}/reject/kecamatan', 'kecamatanReject')->name('reports.kecamatan.reject');
     Route::get('admin/report/{id}/comment/kecamatan','kecamatanCommentGet')->name('reports.kecamatan.comment.get');
     Route::post('admin/report/{id}/comment/kecamatan','kecamatanCommentPost')->name('reports.kecamatan.comment.store');
+    // PDF
     Route::get('/reports/{id}/download',  'downloadPDF')->name('reports.download');
+    Route::get('/reports/recap/week', 'weekRecapPDF')->name('reports.week');
+    Route::get('/reports/recap/month', 'monthRecapPDF')->name('reports.month');
 });

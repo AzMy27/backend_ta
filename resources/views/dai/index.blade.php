@@ -68,12 +68,18 @@
                             </div>
                         </div>
                         <div class="btn-group">
-                            <a href="{{route('dai.show',$item->id)}}" class="btn btn-sm btn-success">Lihat</a>
-                            <a href="{{route('dai.edit',$item->id)}}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{route('dai.show',$item->id)}}" class="btn btn-sm btn-success">
+                                <i class="fa fa-eye"></i>Lihat
+                            </a>
+                            <a href="{{route('dai.edit',$item->id)}}" class="btn btn-sm btn-warning">
+                                <i class="fa fa-edit"></i>Ubah
+                            </a>
                             <form action="{{route('dai.destroy',$item->id)}}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash"></i>Hapus
+                                </button>
                             </form>
                         </div>
                     </td>

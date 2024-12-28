@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use PDF;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
@@ -47,7 +48,8 @@ class ReportController extends Controller
         ]);
     }
 
-    public function downloadPDF(string $id){
+    public function downloadPDF(string $id)
+    {
         $user = Auth::user();
         $report = Report::findOrFail($id);
 
@@ -232,13 +234,73 @@ class ReportController extends Controller
         return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
     }
 
-    public function weeklyRecap(Request $request)
+    public function weekRecapPDF(Request $request)
     {
+        $user = Auth::user();
+        $date = $request->input('date', now());
+        $startOfWeek = Carbon::parse($date)->startOfWeek();
+        $endOfWeek = Carbon::parse($date)->endOfWeek();
 
+        $query = Report::whereBetween('date', [
+            $startOfWeek->format('Y-m-d'), 
+            $endOfWeek->format('Y-m-d'),
+        ]);
+
+        if($user->isDesa()){
+            $query->whereHas('dai', function($q) use($user){
+                $q->where('desa_id', $user->desa->id);
+            });
+        }elseif($user->isKecamatan()){
+            $query->whereHas('dai.desa', function($q) use($user){
+                $q->where('kecamatan_id', $user->kecamatan->id);
+            });        
+        }
+
+        $reports = $query->with(['dai', 'dai.desa'])->orderBy('date','asc')->get();
+        $groupedReports = $reports->groupBy('dai.id');
+        
+        $pdf = PDF::loadView('reports.week', [
+            'groupedReports' => $groupedReports,
+            'startDate' => $startOfWeek,
+            'endDate' => $endOfWeek,
+            'user' => $user
+        ])->setPaper('a4','landscape');
+        
+        return $pdf->download('rekap-mingguan-'.$startOfWeek->format('Y-m-d').'.pdf');
     }
 
-    public function monthlyRecap(Request $request)
+    public function monthRecapPDF(Request $request)
     {
+        $user = Auth::user();
+        $date = $request->input('date', now());
+        $startOfMonth = Carbon::parse($date)->startOfMonth();
+        $endOfMonth = Carbon::parse($date)->endOfMonth();
+
+        $query = Report::whereBetween('date', [
+            $startOfMonth->format('Y-m-d'),
+            $endOfMonth->format('Y-m-d'),
+        ]);
+
+        if($user->isDesa()){
+            $query->whereHas('dai', function($q) use($user){
+                $q->where('desa_id', $user->desa->id);
+            });
+        }elseif($user->isKecamatan()){
+            $query->whereHas('dai.desa', function($q) use($user){
+                $q->where('kecamatan_id', $user->kecamatan->id);
+            });        
+        }
+
+        $reports = $query->with(['dai', 'dai.desa'])->orderBy('date','asc')->get();
+        $groupedReports = $reports->groupBy('dai.id');
         
+        $pdf = PDF::loadView('reports.month', [
+            'groupedReports' => $groupedReports,
+            'startDate' => $startOfMonth,
+            'endDate' => $endOfMonth,
+            'user' => $user
+        ])->setPaper('a4','landscape');
+        
+        return $pdf->download('rekap-bulanan-'.$startOfMonth->format('Y-m-d').'.pdf');
     }
 }

@@ -38,7 +38,7 @@ class DaiController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
-            'nik'=>'required|unique:dais,nik',
+            'nik'=>'required|unique:dais,nik|digits:16',
             'nama'=>'required',
             'no_hp'=>'required',
             'tanggal_lahir'=>'required|date',
@@ -52,6 +52,7 @@ class DaiController extends Controller
             'password'=>'required|min:8',
         ], [
             'nik.unique' => 'NIK ini sudah terdaftar. Gunakan NIK lain.',
+            'nik.digits' => 'NIK harus terdiri dari 16 digit.',
             'email.unique' => 'Email ini sudah terdaftar. Gunakan email lain.',
             'password.min' => 'Password harus minimal 8 karakter.',
         ]); 
