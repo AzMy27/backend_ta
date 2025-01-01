@@ -47,6 +47,14 @@
                                 <td>{{$reports->description}}</td>
                             </tr>
                             <tr>
+                                <th class="bg-light">Koreksi Desa</th>
+                                <td>{{$reports->koreksi_desa ?? 'Belum dikoreksi'}}</td>
+                            </tr>
+                            <tr>
+                                <th class="bg-light">Koreksi Kecamatan</th>
+                                <td>{{$reports->koreksi_kecamatan ?? 'Belum dikoreksi'}}</td>
+                            </tr>
+                            <tr>
                                 <th class="bg-light">Gambar</th>
                                 <td>
                                     @if($reports->images)

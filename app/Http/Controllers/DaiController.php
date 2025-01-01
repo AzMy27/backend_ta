@@ -54,7 +54,7 @@ class DaiController extends Controller
             'nik.unique' => 'NIK ini sudah terdaftar. Gunakan NIK lain.',
             'nik.digits' => 'NIK harus terdiri dari 16 digit.',
             'email.unique' => 'Email ini sudah terdaftar. Gunakan email lain.',
-            'password.min' => 'Password harus minimal 8 karakter.',
+            'password.min' => 'Password harus minimal 8 huruf.',
         ]); 
         if($request->hasFile('foto_dai')){
             $data['foto_dai'] =  $request->file('foto_dai')->store('foto_dai','public');

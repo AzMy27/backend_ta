@@ -54,17 +54,21 @@ Route::controller(ReportController::class)->middleware('auth')->group(function()
     Route::put('/admin/report/{id}/edit', 'update')->name('reports.update');
     Route::delete('/admin/report/{id}/destroy', 'destroy')->name('reports.destroy');
     // Desa
-    Route::post('admin/report/{id}/approve/desa', 'desaApprove')->name('reports.desa.approve');
-    Route::post('admin/report/{id}/reject/desa', 'desaReject')->name('reports.desa.reject');
-    Route::get('admin/report/{id}/comment/desa','desaCommentGet')->name('reports.desa.comment.get');
-    Route::post('admin/report/{id}/comment/desa','desaCommentPost')->name('reports.desa.comment.store');
+    Route::post('admin/reports/{id}/approve/desa', 'desaApprove')->name('reports.desa.approve');
+    Route::post('admin/reports/{id}/reject/desa', 'desaReject')->name('reports.desa.reject');
+    Route::get('admin/reports/{id}/approve/comment/desa', 'desaApproveCommentGet')->name('reports.desa.approve.comment.get');
+    Route::post('admin/reports/{id}/approve/comment/desa', 'desaApproveCommentPost')->name('reports.desa.approve.comment.post');
+    Route::get('admin/reports/{id}/comment/desa','desaRejectCommentGet')->name('reports.desa.comment.get');
+    Route::post('admin/reports/{id}/comment/desa','desaRejectCommentPost')->name('reports.desa.comment.post');
     // Kecamatan
-    Route::post('admin/report/{id}/approve/kecamatan', 'kecamatanApprove')->name('reports.kecamatan.approve');
-    Route::post('admin/report/{id}/reject/kecamatan', 'kecamatanReject')->name('reports.kecamatan.reject');
-    Route::get('admin/report/{id}/comment/kecamatan','kecamatanCommentGet')->name('reports.kecamatan.comment.get');
-    Route::post('admin/report/{id}/comment/kecamatan','kecamatanCommentPost')->name('reports.kecamatan.comment.store');
+    Route::post('admin/reports/{id}/approve/kecamatan', 'kecamatanApprove')->name('reports.kecamatan.approve');
+    Route::post('admin/reports/{id}/reject/kecamatan', 'kecamatanReject')->name('reports.kecamatan.reject');
+    Route::get('admin/reports/{id}/approve/comment/kecamatan', 'kecamatanApproveCommentGet')->name('reports.kecamatan.approve.comment.get');
+    Route::post('admin/reports/{id}/approve/comment/kecamatan', 'kecamatanApproveCommentPost')->name('reports.kecamatan.approve.comment.post');
+    Route::get('admin/reports/{id}/comment/kecamatan','kecamatanRejectCommentGet')->name('reports.kecamatan.comment.get');
+    Route::post('admin/reports/{id}/comment/kecamatan','kecamatanCRejectommentPost')->name('reports.kecamatan.comment.post');
     // PDF
-    Route::get('/reports/{id}/download',  'downloadPDF')->name('reports.download');
-    Route::get('/reports/recap/week', 'weekRecapPDF')->name('reports.week');
-    Route::get('/reports/recap/month', 'monthRecapPDF')->name('reports.month');
+    Route::get('/reports/{id}/download/pdf',  'downloadPDF')->name('reports.download');
+    Route::get('/reports/week/pdf', 'weekRecapPDF')->name('reports.week');
+    Route::get('/reports/month/pdf', 'monthRecapPDF')->name('reports.month');
 });

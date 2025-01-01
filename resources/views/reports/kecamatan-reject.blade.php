@@ -8,7 +8,7 @@
                     <h4 class="mb-0">Berikan Alasan Penolakan</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('reports.kecamatan.comment.store', $report->id) }}" method="POST">
+                    <form action="{{ route('reports.kecamatan.comment.post', $report->id) }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="comment" class="form-label">Komentar</label>
@@ -23,7 +23,9 @@
                             @enderror
                         </div>
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('reports.index') }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('reports.show',$report->id) }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
                             <button type="submit" class="btn btn-danger">Kirim Komentar</button>
                         </div>
                     </form>

@@ -140,27 +140,58 @@ class ReportController extends Controller
         $user = Auth::user();
         $report = Report::findOrFail($id);
         if($user->isDesa() && $user->desa->id == $report->dai->desa_id){
-            $report->validasi_desa = 'diterima';
-            $report->save();
-            $this->sendDaiNotification($report, 'diterima', 'Desa');
-            return redirect()->route('reports.index')->with('success', 'Laporan berhasil diterima.');
+            return redirect()->route('reports.desa.approve.comment.get', $report->id);
         }
-
         return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang untuk aksi ini.');
-
     }
 
     public function desaReject(Request $request, $id){
         $user = Auth::user();
         $report = Report::findOrFail($id);
         if($user->isDesa() && $user->desa->id == $report->dai->desa_id){
-            $report->validasi_desa = 'ditolak';
-            $report->save();
             return redirect()->route('reports.desa.comment.get', $report->id);
         }
         return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang');
     }
+    // Komentar desa
+    public function desaApproveCommentGet($id){
+        $report = Report::findOrFail($id);
+        return view('reports.desa-approve', compact('report'));
+    }
 
+    public function desaApproveCommentPost(Request $request, $id){
+        $request->validate([
+            'comment'=>'required|string'
+        ],[
+            'comment.required'=> 'Komentar harus diisi'
+        ]);
+        $report = Report::findOrFail($id);
+        $report->validasi_desa = 'diterima';
+        $report->koreksi_desa = $request->comment;
+        $report->save();
+        $this->sendDaiNotification($report, 'diterima', 'Desa', $request->comment);
+        return redirect()->route('reports.index')->with('success', 'Laporan berhasil diterima dan komentar disimpan.');
+    }
+
+    public function desaRejectCommentGet($id){
+        $report = Report::findOrFail($id);
+        return view('reports.desa-reject', compact('report'));
+    }
+
+    public function desaRejectCommentPost(Request $request, $id){
+        $request->validate([
+            'comment'=>'required|string'
+        ],[
+            'comment.required'=> 'Komentar harus diisi'
+        ]);
+        $report = Report::findOrFail($id);
+        $report->validasi_desa = 'ditolak';
+        $report->koreksi_desa = $request->comment;
+        $report->save();
+        $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
+        return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
+    }    
+    // Kecamatan
     public function kecamatanCanValidate(Report $report){
         return $report->validasi_desa === 'diterima';
     }
@@ -174,10 +205,7 @@ class ReportController extends Controller
         }
 
         if($user->isKecamatan() && $user->kecamatan->id == $report->dai->desa->kecamatan_id){
-            $report->validasi_kecamatan = 'diterima';
-            $report->save();
-            $this->sendDaiNotification($report, 'diterima', 'Kecamatan');
-            return redirect()->route('reports.index')->with('success','Laporan berhasil diterima');
+            return redirect()->route('reports.kecamatan.approve.comment.get', $report->id);
         }
         return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang untuk aksi ini.');
     }
@@ -191,88 +219,60 @@ class ReportController extends Controller
         }
 
         if($user->isKecamatan() && $user->kecamatan->id == $report->dai->desa->kecamatan_id){
-            $report->validasi_kecamatan = 'ditolak';
-            $report->save();
             return redirect()->route('reports.kecamatan.comment.get', $report->id);
         }
-        return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang');
+        return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang untuk aksi ini');
     }
-
-    public function desaCommentGet($id){
+    // Komentar kecamata
+    public function kecamatanApproveCommentGet($id){
         $report = Report::findOrFail($id);
-        return view('reports.desa-reject', compact('report'));
+        return view('reports.kecamatan-approve', compact('report'));
     }
 
-    public function desaCommentPost(Request $request, $id){
+    public function kecamatanApproveCommentPost(Request $request, $id){
         $request->validate([
             'comment'=>'required|string'
         ],[
-            'comment.required'=> 'Alasan harus diisi'
+            'comment.required'=> 'Komentar harus diisi'
         ]);
         $report = Report::findOrFail($id);
-        $report->koreksi_desa = $request->comment;
+        $report->validasi_kecamatan = 'diterima';
+        $report->koreksi_kecamatan = $request->comment;
         $report->save();
-        $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
-        return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
+        $this->sendDaiNotification($report, 'diterima', 'Kecamatan', $request->comment);
+        return redirect()->route('reports.index')->with('success', 'Laporan berhasil diterima dan komentar disimpan.');
     }
 
-    public function kecamatanCommentGet($id){
+    public function kecamatanRejectCommentGet($id){
         $report = Report::findOrFail($id);
         return view('reports.kecamatan-reject', compact('report'));
     }
 
-    public function kecamatanCommentPost(Request $request, $id){
+    public function kecamatanRejectCommentPost(Request $request, $id){
         $request->validate([
             'comment' => 'required|string',
         ],[
             'comment.required'=> 'Alasan harus diisi'
         ]);
         $report = Report::findOrFail($id);
+        $report->validasi_kecamatan = 'ditolak';
         $report->koreksi_kecamatan = $request->comment;
         $report->save();
         $this->sendDaiNotification($report, 'ditolak','Desa',$request->comment);
         return redirect()->route('reports.index')->with('success','Pesan perbaikan berhasil disimpan');
     }
 
-    public function weekRecapPDF(Request $request)
-    {
-        $user = Auth::user();
-        $date = $request->input('date', now());
-        $startOfWeek = Carbon::parse($date)->startOfWeek();
-        $endOfWeek = Carbon::parse($date)->endOfWeek();
-
-        $query = Report::whereBetween('date', [
-            $startOfWeek->format('Y-m-d'), 
-            $endOfWeek->format('Y-m-d'),
-        ]);
-
-        if($user->isDesa()){
-            $query->whereHas('dai', function($q) use($user){
-                $q->where('desa_id', $user->desa->id);
-            });
-        }elseif($user->isKecamatan()){
-            $query->whereHas('dai.desa', function($q) use($user){
-                $q->where('kecamatan_id', $user->kecamatan->id);
-            });        
-        }
-
-        $reports = $query->with(['dai', 'dai.desa'])->orderBy('date','asc')->get();
-        $groupedReports = $reports->groupBy('dai.id');
-        
-        $pdf = PDF::loadView('reports.week', [
-            'groupedReports' => $groupedReports,
-            'startDate' => $startOfWeek,
-            'endDate' => $endOfWeek,
-            'user' => $user
-        ])->setPaper('a4','landscape');
-        
-        return $pdf->download('rekap-mingguan-'.$startOfWeek->format('Y-m-d').'.pdf');
-    }
-
     public function monthRecapPDF(Request $request)
     {
         $user = Auth::user();
-        $date = $request->input('date', now());
+        $date = $request->input('date');
+        
+        if ($date) {
+            $date = Carbon::createFromFormat('Y-m', $date);
+        } else {
+            $date = now();
+        }
+
         $startOfMonth = Carbon::parse($date)->startOfMonth();
         $endOfMonth = Carbon::parse($date)->endOfMonth();
 
@@ -282,16 +282,23 @@ class ReportController extends Controller
         ]);
 
         if($user->isDesa()){
-            $query->whereHas('dai', function($q) use($user){
+            $query = $query->whereHas('dai', function($q) use($user){
                 $q->where('desa_id', $user->desa->id);
             });
         }elseif($user->isKecamatan()){
-            $query->whereHas('dai.desa', function($q) use($user){
+            $query = $query->whereHas('dai.desa', function($q) use($user){
                 $q->where('kecamatan_id', $user->kecamatan->id);
             });        
         }
 
-        $reports = $query->with(['dai', 'dai.desa'])->orderBy('date','asc')->get();
+        $reports = $query->with(['dai', 'dai.desa'])->orderBy('date', 'asc')->get();
+
+        if ($reports->isEmpty()) {
+            return redirect()->route('reports.index')
+                ->with('error', 'Tidak ada laporan untuk bulan ' . 
+                    $startOfMonth->isoFormat('MMMM Y'));
+        }
+
         $groupedReports = $reports->groupBy('dai.id');
         
         $pdf = PDF::loadView('reports.month', [
@@ -299,7 +306,7 @@ class ReportController extends Controller
             'startDate' => $startOfMonth,
             'endDate' => $endOfMonth,
             'user' => $user
-        ])->setPaper('a4','landscape');
+        ])->setPaper('a4', 'landscape');
         
         return $pdf->download('rekap-bulanan-'.$startOfMonth->format('Y-m-d').'.pdf');
     }

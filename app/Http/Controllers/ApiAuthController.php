@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class ApiAuthController extends Controller
 {
@@ -17,16 +18,23 @@ class ApiAuthController extends Controller
                 'password' => 'required',
             ]);
 
-            $credentials = $request->only(['email', 'password']);
-            if (!Auth::attempt($credentials)) {
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Email atau password salah'
+                    'message' => 'Pengguna tidak terdaftar'
                 ], 401);
             }
 
-            $user = Auth::user();
-            if($user->level !=='dai'){
+            if (!Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Password anda salah'
+                ], 401);
+            }
+
+            Auth::login($user);
+            if($user->level !== 'dai'){
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Anda bukan pengguna dai',

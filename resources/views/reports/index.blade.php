@@ -6,68 +6,80 @@
             <i class="fas fa-table me-1"></i>
             Daftar Laporan
         </div>
-        <div class="btn-group">
-            <a href="{{ route('reports.month') }}" class="btn {{ Request::routeIs('reports.month') ? 'btn-success' : 'btn-outline-success' }}">
-                <i class="fas fa-calendar-alt me-1"></i> Bulanan
-            </a>
-            <a href="{{ route('reports.week') }}" class="btn {{ Request::routeIs('reports.week') ? 'btn-warning' : 'btn-outline-warning' }}">
-                <i class="fas fa-calendar-week me-1"></i> Mingguan
-            </a>
+        <div class="d-flex gap-3 align-items-center">
+            <form action="{{route('reports.month')}}" id="monthSelect" method="GET" class="d-flex gap-2">
+                <input type="month" name="date" class="form-control form-control-sm" value="{{ now()->format('Y-m') }}">
+                <button type="submit" class="btn btn-sm {{ Request::routeIs('reports.month') ? 'btn-success' : 'btn-outline-success' }}">
+                    <i class="fas fa-calendar-alt me-1"></i> Rekap
+                </button>
+            </form>
         </div>
     </div>
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="card-body">
         <div class="table-responsive">
-            
-            <table id="datatablesSimple" class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nama Dai</th>
-                        <th>Domisili</th>
-                        <th>Judul Kegiatan</th>
-                        <th>Tanggal</th>
-                        <th>Status Desa</th>
-                        @if (Auth::user()->isKecamatan())
+            @if($reports->isEmpty())
+                <div class="text-center py-5">
+                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Belum ada laporan tersedia</h5>
+                    <p class="text-muted">Laporan akan muncul setelah dai mengirim laporannya</p>
+                </div>
+            @else
+                <table id="datatablesSimple" class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nama Dai</th>
+                            <th>Domisili</th>
+                            <th>Judul Kegiatan</th>
+                            <th>Tanggal</th>
+                            <th>Status Desa</th>
+                            @if (Auth::user()->isKecamatan())
                             <th>Status Kecamatan</th>
-                        @endif
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($reports as $key=>$item)                                            
-                    <tr>
-                        <td>{{$item->dai->nama}}</td>
-                        <td>{{$item->dai->desa->nama_desa}}, {{$item->dai->desa->kecamatan->nama_kecamatan}}</td>
-                        <td>{{$item->title}}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y H:i:s') }}</td>
-                        <td>
-                            @if ($item->validasi_desa === 'diterima')
-                                <span class="badge bg-success">Diterima</span>
-                            @elseif($item->validasi_desa === 'ditolak')
-                                <span class="badge bg-danger">Ditolak</span>
-                            @else
-                                <span class="badge bg-warning">Belum Diproses</span>
                             @endif
-                        </td>
-                        @if (Auth::user()->isKecamatan())
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($reports as $key=>$item)                                            
+                        <tr>
+                            <td>{{$item->dai->nama}}</td>
+                            <td>{{$item->dai->desa->nama_desa}}, {{$item->dai->desa->kecamatan->nama_kecamatan}}</td>
+                            <td>{{$item->title}}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y H:i:s') }}</td>
                             <td>
-                                @if ($item->validasi_kecamatan ==='diterima')
+                                @if ($item->validasi_desa === 'diterima')
                                     <span class="badge bg-success">Diterima</span>
-                                @elseif($item->validasi_kecamatan === 'ditolak')
+                                @elseif($item->validasi_desa === 'ditolak')
                                     <span class="badge bg-danger">Ditolak</span>
                                 @else
                                     <span class="badge bg-warning">Belum Diproses</span>
                                 @endif
                             </td>
-                        @endif
-                        <td>
-                            <a href="{{route('reports.show',$item->id)}}" class="btn btn-success btn-sm">
-                                <i class="fas fa-eye me-1"></i> Lihat
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                            @if (Auth::user()->isKecamatan())
+                                <td>
+                                    @if ($item->validasi_kecamatan ==='diterima')
+                                        <span class="badge bg-success">Diterima</span>
+                                    @elseif($item->validasi_kecamatan === 'ditolak')
+                                        <span class="badge bg-danger">Ditolak</span>
+                                    @else
+                                        <span class="badge bg-warning">Belum Diproses</span>
+                                    @endif
+                                </td>
+                            @endif
+                            <td>
+                                <a href="{{route('reports.show',$item->id)}}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-eye me-1"></i> Lihat
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
 </div>
