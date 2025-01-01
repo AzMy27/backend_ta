@@ -14,7 +14,7 @@
                             <label for="comment" class="form-label">Komentar/Catatan</label>
                             <textarea name="comment" id="comment" rows="5" 
                                 class="form-control @error('comment') is-invalid @enderror" 
-                                placeholder="Masukkan komentar atau catatan untuk penerimaan laporan">{{ old('comment') }}</textarea>
+                                placeholder="Masukkan saran laporan">{{ old('comment') }}</textarea>
                             @error('comment')
                             <div class="invalid-feedback">
                                 {{ $message }}

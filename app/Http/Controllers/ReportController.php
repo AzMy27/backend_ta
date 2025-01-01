@@ -48,31 +48,6 @@ class ReportController extends Controller
         ]);
     }
 
-    public function downloadPDF(string $id)
-    {
-        $user = Auth::user();
-        $report = Report::findOrFail($id);
-
-            if ($user->isDesa()) {
-                if ($report->dai->desa_id !== $user->desa->id) {
-                    return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk mengunduh laporan dari desa lain.');
-                }
-            }
-
-            if ($user->isKecamatan()) {
-                if ($report->dai->desa->kecamatan_id !== $user->kecamatan->id) {
-                    return redirect()->route('reports.index')->with('error', 'Anda tidak memiliki akses untuk mengunduh laporan dari kecamatan lain.');
-                }
-            }
-        
-        $pdf = PDF::loadView('reports.pdf', [
-            'report' => $report,
-            'images' => json_decode($report->images, true)
-        ]);
-        
-        return $pdf->download('laporan - '.$report->title.'.pdf');
-    }
-
     private function sendDaiNotification($report, $status, $level, $comment = null){
         $dai = User::find($report->dai->user_id);
         if ($dai && $dai->token_firebase) {
