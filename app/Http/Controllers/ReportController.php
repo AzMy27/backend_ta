@@ -198,7 +198,7 @@ class ReportController extends Controller
         }
         return redirect()->route('reports.index')->with('error', 'Anda tidak berwenang untuk aksi ini');
     }
-    // Komentar kecamata
+    // Komentar kecamatan
     public function kecamatanApproveCommentGet($id){
         $report = Report::findOrFail($id);
         return view('reports.kecamatan-approve', compact('report'));

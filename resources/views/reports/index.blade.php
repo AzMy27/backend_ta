@@ -35,7 +35,7 @@
                             <th>Nama Dai</th>
                             <th>Domisili</th>
                             <th>Judul Kegiatan</th>
-                            <th>Tanggal</th>
+                            <th>Dikirim</th>
                             <th>Status Desa</th>
                             @if (Auth::user()->isKecamatan())
                             <th>Status Kecamatan</th>

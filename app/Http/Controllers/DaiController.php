@@ -157,6 +157,7 @@ class DaiController extends Controller
 
         if ($dai->user) {
             $dai->user->update([
+                'name' => $data['nama'] ?? $dai->nama,
                 'image' => $data['foto_dai'] ?? $dai->foto_dai,
             ]);
         }

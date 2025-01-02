@@ -46,18 +46,26 @@ class ApiAuthController extends Controller
                 'status' => 'success',
                 'token' => $token,
                 'token_type' => 'Bearer',
+                'expired_at' => now()->addDays(7)->timestamp,
                 'user'=>[
                     'id'=>$user->id,
                     'name'=>$user->name,
                     'email'=>$user->email ?? ""
                 ]
             ]);
-        } catch (ValidationException $e) {
+
+            if (!RateLimiter::attempt('login-attempts:'.$request->ip(), 5, 60)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Too many login attempts. Please try again later.'
+                ], 429);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Login error: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
+                'message' => 'An unexpected error occurred'
+            ], 500);
         }
     }
 
