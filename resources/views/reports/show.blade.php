@@ -73,7 +73,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Dibuat</th>
+                                <th class="bg-light">Dikirim</th>
                                 <td>{{$reports->created_at}}</td>
                             </tr>
                             <tr>

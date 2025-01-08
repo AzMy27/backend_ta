@@ -46,7 +46,7 @@ class DaiController extends Controller
             'alamat'=>'required',
             'pendidikan_akhir'=>'required',
             'status_kawin'=>'required',
-            'foto_dai'=>'nullable|image',
+            'foto_dai'=>'nullable|image|mimes:jpeg,png,jpg,jfif,gif|max:2048',
             'desa_id' => 'exists:desas,id',
             'email'=>'required|email|unique:users,email',
             'password'=>'required|min:8',
@@ -55,6 +55,9 @@ class DaiController extends Controller
             'nik.digits' => 'NIK harus terdiri dari 16 digit.',
             'email.unique' => 'Email ini sudah terdaftar. Gunakan email lain.',
             'password.min' => 'Password harus minimal 8 huruf.',
+            'foto_dai.image' => 'File harus berupa gambar.',
+            'foto_dai.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'foto_dai.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
         ]); 
         if($request->hasFile('foto_dai')){
             $data['foto_dai'] =  $request->file('foto_dai')->store('foto_dai','public');
@@ -135,7 +138,7 @@ class DaiController extends Controller
             }
         }
         $data=$request->validate([
-            'nik'=>'required',
+            'nik'=>'required|unique:dais,nik|digits:16',
             'nama'=>'required',
             'no_hp'=>'required',
             'tanggal_lahir'=>'required|date',
@@ -143,7 +146,13 @@ class DaiController extends Controller
             'alamat'=>'required',
             'pendidikan_akhir'=>'required',
             'status_kawin'=>'required',
-            'foto_dai'=>'nullable|image',
+            'foto_dai'=>'nullable|image|mimes:jpeg,png,jpg,jfif,gif|max:2048',
+        ],[
+            'nik.unique' => 'NIK ini sudah terdaftar. Gunakan NIK lain.',
+            'nik.digits' => 'NIK harus terdiri dari 16 digit.',
+            'foto_dai.image' => 'File harus berupa gambar.',
+            'foto_dai.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
+            'foto_dai.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
         ]); 
         if ($request->hasFile('foto_dai')) {
             if ($dai->foto_dai && Storage::disk('public')->exists($dai->foto_dai)) {
