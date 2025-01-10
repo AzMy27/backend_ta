@@ -19,4 +19,8 @@ class Desa extends Model
     public function dai(){
         return $this->hasMany(Dai::class);
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
 }

@@ -12,6 +12,13 @@
                 {{ session('error') }}
             </div>
         @endif
+        @if($data->isEmpty())
+            <div class="text-center py-5">
+                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Belum ada data dai yang tersedia</h5>
+                <p class="text-muted">Data akan muncul setelah ditambahkan</p>
+            </div>
+        @else
         <table class="table table-striped table-bordered" id="datatablesSimple">
             <thead>
                 <tr>
@@ -87,6 +94,7 @@
                 @endforeach                       
             </tbody>
         </table>
+        @endif
     </div>
 </div>
 @endsection

@@ -40,6 +40,9 @@ class User extends Authenticatable
     public function isDai(){
         return $this->level == 'dai';
     }
+    public function isSuper(){
+        return $this->level == 'admin';
+    }
     public function isDesa(){
         return $this->level == 'desa';
     }

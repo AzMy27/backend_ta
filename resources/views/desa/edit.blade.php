@@ -25,14 +25,14 @@
 
 
                                     <br>
-                                    <div class="form-group">
+                                    {{-- <div class="form-group">
                                         <label for="">Email</label>
                                         <input type="email" name="email" class="form-control" placeholder="Masukkan Email">
                                     </div>
                                     <div class="form-group">
                                         <label for="">Password</label>
                                         <input type="text" name="password" class="form-control" placeholder="Masukkan Password">
-                                    </div>
+                                    </div> --}}
                                     <br>
                                     <div class="form-grup" >
                                         <button class="btn-primary btn btn-sm float-end">Kirim</button>

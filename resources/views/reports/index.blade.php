@@ -37,9 +37,9 @@
                             <th>Judul Kegiatan</th>
                             <th>Dikirim</th>
                             <th>Status Desa</th>
-                            @if (Auth::user()->isKecamatan())
+                            {{-- @if (Auth::user()->isKecamatan()) --}}
                             <th>Status Kecamatan</th>
-                            @endif
+                            {{-- @endif --}}
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -59,7 +59,7 @@
                                     <span class="badge bg-warning">Belum Diproses</span>
                                 @endif
                             </td>
-                            @if (Auth::user()->isKecamatan())
+                            {{-- @if (Auth::user()->isKecamatan()) --}}
                                 <td>
                                     @if ($item->validasi_kecamatan ==='diterima')
                                         <span class="badge bg-success">Diterima</span>
@@ -69,7 +69,7 @@
                                         <span class="badge bg-warning">Belum Diproses</span>
                                     @endif
                                 </td>
-                            @endif
+                            {{-- @endif --}}
                             <td>
                                 <a href="{{route('reports.show',$item->id)}}" class="btn btn-success btn-sm">
                                     <i class="fas fa-eye me-1"></i> Lihat

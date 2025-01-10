@@ -138,7 +138,7 @@ class DaiController extends Controller
             }
         }
         $data=$request->validate([
-            'nik'=>'required|unique:dais,nik|digits:16',
+            // 'nik'=>'required|digits:16',
             'nama'=>'required',
             'no_hp'=>'required',
             'tanggal_lahir'=>'required|date',
@@ -148,8 +148,8 @@ class DaiController extends Controller
             'status_kawin'=>'required',
             'foto_dai'=>'nullable|image|mimes:jpeg,png,jpg,jfif,gif|max:2048',
         ],[
-            'nik.unique' => 'NIK ini sudah terdaftar. Gunakan NIK lain.',
-            'nik.digits' => 'NIK harus terdiri dari 16 digit.',
+            // 'nik.unique' => 'NIK ini sudah terdaftar. Gunakan NIK lain.',
+            // 'nik.digits' => 'NIK harus terdiri dari 16 digit.',
             'foto_dai.image' => 'File harus berupa gambar.',
             'foto_dai.mimes' => 'Format gambar yang diizinkan: jpeg, png, jpg, gif.',
             'foto_dai.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',

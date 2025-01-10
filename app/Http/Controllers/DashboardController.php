@@ -5,17 +5,50 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Report;
 use App\Models\User;
+use App\Models\Kecamatan;
+use App\Models\Desa;
+use App\Models\Dai;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $monthlyReports = $this->getMonthlyReports($user);
         $kecamatanName = null;
+
+        if (Auth::user()->isSuper()) {
+            $data['jumlah_report'] = Report::count();
+            $data['jumlah_report_diterima'] = Report::whereValidasiKecamatan('diterima')->count();
+            $data['jumlah_kecamatan'] = Kecamatan::count();
+            $data['jumlah_desa'] = Desa::count();
+            $data['jumlah_dai'] = Dai::count();
+        } elseif (Auth::user()->isKecamatan()) {
+            $data['jumlah_desa'] = Desa::where('kecamatan_id', Auth::user()->kecamatan->id)->count();
+            $data['jumlah_dai'] = Dai::whereHas('desa',function($q){
+                $q->where('kecamatan_id',Auth::user()->kecamatan->id);
+            })->count();
+
+            $data['jumlah_report'] = Report::whereHas('dai', function ($q){
+                $q->whereHas('desa.kecamatan',function($q){
+                    $q->whereId(Auth::user()->kecamatan->id);
+                });
+            })->count();
+            $data['jumlah_report_diterima'] = Report::whereHas('dai', function ($q){
+                $q->whereHas('desa.kecamatan',function($q){
+                    $q->whereId(Auth::user()->kecamatan->id);
+                });
+            })->whereValidasiKecamatan('diterima')->count();
+        } elseif (Auth::user()->isDesa()) {
+            $data['jumlah_dai'] = Dai::where('desa_id', Auth::user()->desa->id)->count();
+            $data['jumlah_report'] = Report::whereHas('dai', function ($q){
+                $q->whereDesaId(Auth::user()->desa->id);
+            })->count();
+            $data['jumlah_report_diterima'] = Report::whereHas('dai', function ($q){
+                $q->whereDesaId(Auth::user()->desa->id);
+            })->whereValidasiDesa('diterima')->count();
+        }
+        // return $data;
         if($user->isKecamatan()){
             $kecamatanName = $user->kecamatan->nama_kecamatan;
         }
@@ -32,40 +65,10 @@ class DashboardController extends Controller
             $reports = Report::get();
         }
 
-        return view('dashboard.admin',[
+        return view('dashboard.index',array_merge([
             'reports' => $reports,
-            'monthlyReports' => $monthlyReports,
-            'kecamatanName'=>$kecamatanName
-        ]);
+        ],$data));
     }
 
-    private function getMonthlyReports($user)
-    {
-        $query = Report::query()
-            ->select(
-                DB::raw('MONTH(created_at) as month'),
-                DB::raw('YEAR(created_at) as year'),
-                DB::raw('COUNT(*) as total'),
-                DB::raw('COUNT(DISTINCT dai_id) as total_dai')
-            );
-        if($user->isDesa()){
-            $query->whereHas('dai', function($q) use($user){
-                $q->where('desa_id', $user->desa->id);
-            });
-        }elseif($user->isKecamatan()){
-            $query->whereHas('dai.desa', function($q) use($user){
-                $q->where('kecamatan_id', $user->kecamatan->id);
-            });
-        }
 
-        return $query->where('created_at', '>=', Carbon::now()->subMonths(12))
-            ->groupBy('year', 'month')
-            ->orderBy('year', 'desc')
-            ->orderBy('month', 'desc')
-            ->get()
-            ->map(function($item) {
-                $item->month_name = Carbon::create(2000, $item->month, 1)->format('F');
-                return $item;
-            });
-    }
 }

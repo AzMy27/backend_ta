@@ -67,15 +67,21 @@ class DesaController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $validatedData = $request->validate([
+        $dataDesa = $request->validate([
             'nama_desa' => 'required',
             'nama_kepala' => 'required',
             'no_telp_desa' => 'required',
         ]);
 
-        $desa->update($validatedData);
+        $desa->update($dataDesa);
 
-        return redirect()->route('desa.index')->with('success', 'Data desa berhasil diperbarui');
+        if($desa->user){
+            $desa->user->update([
+                'name' => $dataDesa['nama_kepala'] ?? $desa->nama_kepala,
+            ]);
+        }
+
+        return to_route('desa.index')->with('success', 'Data desa berhasil diperbarui');
     }
 
     public function destroy(Desa $desa)
@@ -84,7 +90,7 @@ class DesaController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if ($desa->user->exists()) {
+        if ($desa->user) {
             $desa->user->delete();
         }
         

@@ -3,36 +3,37 @@
 <div class="row">
     <div class="col-xl-3 col-md-6">
         <div class="card bg-primary text-white mb-4">
-            <div class="card-body">Warna Biru</div>
+            <div class="card-body">Total Laporan</div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">View Details</a>
+                <a class="small text-white stretched-link" href="#">{{$jumlah_report}}</a>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
             </div>
         </div>
     </div>
-    <div class="col-xl-3 col-md-6">
+    {{-- <div class="col-xl-3 col-md-6">
         <div class="card bg-warning text-white mb-4">
-            <div class="card-body">Warna Kuning</div>
+            <div class="card-body">Laporan Masuk</div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">View Details</a>
+                <a class="small text-white stretched-link" href="#">.</a>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
             </div>
         </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="card bg-success text-white mb-4">
-            <div class="card-body">Warna Hijau</div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">View Details</a>
-                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
-            </div>
-        </div>
-    </div>
+    </div> --}}
     <div class="col-xl-3 col-md-6">
         <div class="card bg-danger text-white mb-4">
-            <div class="card-body">Warna Merah</div>
+            <div class="card-body">Total Dai</div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="#">View Details</a>
+                <a class="small text-white stretched-link" href="#">{{$jumlah_dai}}</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">Laporan Diterima</div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="#">.</a>
                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
             </div>
         </div>
@@ -43,51 +44,97 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Laporan Kecamatan 
-                    @if ($kecamatanName)
-                        {{$kecamatanName}}
-                    @endif
+                    Laporan Masuk Tahunan ({{$kecamatanName}})
                 </div>
                 <div class="card-body">
-                    <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                    <canvas id="monthlyChart" style="width:100%;max-width:600px"></canvas>
+
                     <script>
-                        const monthlyData = @json($monthlyReports);
-                        
-                        const labels = monthlyData.map(item => `${item.month_name} ${item.year}`);
-                        const totals = monthlyData.map(item => item.total);
-                        const totalDai = monthlyData.map(item => item.total_dai);
-                        
-                        new Chart("myChart", {
-                            type: "bar",
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Laporan Masuk',
-                                    backgroundColor: "rgba(0, 123, 255, 0.5)",
-                                    borderColor: "rgba(0, 123, 255, 1)",
-                                    borderWidth: 1,
-                                    data: totals
-                                },]
+                    const monthLabels = {!! $monthLabels !!};
+                    const monthData = {!! $monthData !!};
+                    const barColors = Array(monthLabels.length).fill('#4e73df');
+                    
+                    new Chart("monthlyChart", {
+                        type: "bar",
+                        data: {
+                            labels: monthLabels,
+                            datasets: [{
+                                backgroundColor: barColors,
+                                data: monthData
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            legend: {display: false},
+                            title: {
+                                display: true,
+                                text: "Laporan Masuk Bulanan"
                             },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        callback: function(value) {if (value % 1 === 0) {return value;}}
                                     }
-                                },
-                                plugins: {
-                                    title: {
-                                        display: true,
-                                        text: 'Rekap Laporan Bulanan'
-                                    },
-                                    legend: {
-                                        display: true
-                                    }
-                                }
+                                }]
                             }
-                        });
-                        </script>
+                        }
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Laporan Masuk Mingguan ({{$kecamatanName}})
+                </div>
+                <div class="card-body">
+                    <canvas id="dailyChart" style="width:100%;max-width:600px"></canvas>
+
+                    <script>
+                    const dailyLabels = {!! $dailyLabels !!};
+                    const dailyData = {!! $dailyData !!};
+
+                    new Chart("dailyChart", {
+                        type: "line",
+                        data: {
+                            labels: dailyLabels,
+                            datasets: [{
+                                fill: false,
+                                lineTension: 0.3,
+                                backgroundColor: "#1cc88a",
+                                borderColor: "#1cc88a",
+                                pointRadius: 3,
+                                pointBackgroundColor: "#1cc88a",
+                                pointBorderColor: "#1cc88a",
+                                pointHoverRadius: 3,
+                                pointHoverBackgroundColor: "#1cc88a",
+                                pointHoverBorderColor: "#1cc88a",
+                                pointHitRadius: 10,
+                                pointBorderWidth: 2,
+                                data: dailyData
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            legend: {display: false},
+                            title: {
+                                display: true,
+                                text: "Laporan Masuk Harian"
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true,
+                                        callback: function(value) {if (value % 1 === 0) {return value;}}
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                    </script>
                 </div>
             </div>
         </div>
