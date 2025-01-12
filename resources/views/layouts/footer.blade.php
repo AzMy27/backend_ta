@@ -19,6 +19,7 @@
 <script src="{{url('/assets/demo/chart-bar-demo.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
 <script src="{{url('/js/datatables-simple-demo.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
 <script>
     @if ($errors->any())
         Swal.fire({
@@ -41,28 +42,53 @@
             text: "{{ session('success') }}",
         });
     @endif
-</script>
-<script>
-    let formToDelete; 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        const deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                formToDelete = this.closest('.delete-form');
-                deleteModal.show();
+    @if(session('error'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: "Gagal!",
+                    text: "{{ session('error') }}",
+                    icon: "error"
+                });
             });
-        });
+        </script>
+    @endif
+</script>
 
-        confirmDeleteBtn.addEventListener('click', function () {
-            if (formToDelete) {
-                formToDelete.submit(); // Kirim form
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('form');
+            
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                form.submit();
             }
         });
     });
+});
+</script>
+<script>
+function confirmDelete(id) {
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Data yang dihapus tidak dapat dikembalikan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
 </script>
 </body>
 </html>

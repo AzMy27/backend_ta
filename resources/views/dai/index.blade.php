@@ -26,7 +26,7 @@
                     <th>NIK</th>
                     <th>Nama</th>
                     <th>Alamat</th>
-                    <th>Domisili</th>
+                    <th>Tempat Tugas</th>
                     <th style="width: 2%">Aksi</th>
                 </tr>
             </thead>
@@ -34,29 +34,12 @@
                 @foreach ($data as $key=>$item)
                 <tr >
                     <td>{{$key+1}}</td>
-                    <td>{{$item->nik}}</td>
+                    <td>{{ substr($item->nik, 0, 4) . str_repeat('x', strlen($item->nik) - 4) }}</td>
                     <td>{{$item->nama}}</td>
                     <td>{{$item->alamat}}</td>
                     <td>{{$item->desa->nama_desa}}, {{$item->desa->kecamatan->nama_kecamatan}}</td>
                     <td style="width: 1%">
                         <!-- Modal Konfirmasi -->
-                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Apakah Anda yakin ingin menghapus data ini?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">

@@ -13,6 +13,8 @@ class Dai extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'alamat',
+        'rt',
+        'rw',
         'pendidikan_akhir',
         'status_kawin',
         'foto_dai',

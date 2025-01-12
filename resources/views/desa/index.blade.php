@@ -39,10 +39,10 @@
                                 <a href="{{route('desa.edit',$item->id)}}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit me-1"></i> Ubah
                                 </a>
-                                <form action="{{route('desa.destroy',$item->id)}}" method="POST">
+                                <form action="{{route('desa.destroy',$item->id)}}" method="POST" id="delete-form-{{$item->id}}">
                                     @csrf
                                     @method('DELETE')
-                                    <button href="#" class="btn btn-sm btn-danger">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{$item->id}})">
                                         <i class="fas fa-trash me-1"></i> Hapus
                                     </button>
                                 </form>
@@ -56,4 +56,3 @@
     </div>
 </div>
 @endsection
-                

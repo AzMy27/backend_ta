@@ -40,18 +40,18 @@
                                         @error('no_hp')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror                                        
-                                    </div>                             
-                                    <div class="form-group">
-                                        <label for="">Tanggal Lahir</label>
-                                        <input type="date" name="tanggal_lahir" class="form-control" >
-                                        @error('tanggal_lahir')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>                                    
+                                    </div>
                                     <div class="form-group">
                                         <label for="">Tempat Lahir</label>
                                         <input type="text" name="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir">
                                         @error('tempat_lahir')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div> 
+                                    <div class="form-group">
+                                        <label for="">Tanggal Lahir</label>
+                                        <input type="date" name="tanggal_lahir" class="form-control" max="{{date('Y-m-d')}}">
+                                        @error('tanggal_lahir')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>                                    
@@ -61,10 +61,32 @@
                                         @error('alamat')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
-                                    </div>                                    
+                                    </div>
                                     <div class="form-group">
-                                        <label for="">Pendidikan Akhir</label>
-                                        <input type="text" name="pendidikan_akhir" class="form-control" placeholder="Masukkan Pendidikan Akhir">
+                                        <label for="">RT</label>
+                                        <input type="text" name="rt" class="form-control" placeholder="Masukkan RT">
+                                        @error('rt')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">RW</label>
+                                        <input type="text" name="rw" class="form-control" placeholder="Masukkan RW">
+                                        @error('rw')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div> 
+                                    <div class="form-group">
+                                        <label for="pendidikan_akhir">Pendidikan Akhir</label>
+                                        <select name="pendidikan_akhir" id="pendidikan_akhir" class="form-control">
+                                            <option value="" disabled selected>Pilih Pendidikan Akhir</option>
+                                            <option value="SMP">SMP</option>
+                                            <option value="SMA">SMA</option>
+                                            <option value="MAN">MAN</option>
+                                            <option value="D3">D3</option>
+                                            <option value="D4/S1">D4/S1</option>
+                                            <option value="S2">S2</option>
+                                        </select>
                                         @error('pendidikan_akhir')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

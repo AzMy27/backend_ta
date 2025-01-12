@@ -31,15 +31,29 @@
             <div class="form-group">
                 <label for="">Tempat Lahir</label>
                 <input type="text" value="{{$data->tempat_lahir}}" name="tempat_lahir" class="form-control" placeholder="Masukkan Tempat Lahir">
-
             </div>                                    
             <div class="form-group">
                 <label for="">Alamat</label>
                 <input type="text" value="{{$data->alamat}}" name="alamat" class="form-control" placeholder="Masukkan alamat">
-            </div>                                    
+            </div>
             <div class="form-group">
-                <label for="">Pendidikan Akhir</label>
-                <input type="text" value="{{$data->pendidikan_akhir}}" name="pendidikan_akhir" class="form-control" placeholder="Masukkan Pendidikan Akhir">
+                <label for="">RT</label>
+                <input type="text" value="{{$data->rt}}" name="rt" class="form-control" placeholder="Masukkan RT">
+            </div>              
+            <div class="form-group">
+                <label for="">RW</label>
+                <input type="text" value="{{$data->rw}}" name="rw" class="form-control" placeholder="Masukkan RW">
+            </div>                                   
+            <div class="form-group">
+                <label for="pendidikan_akhir">Pendidikan Akhir</label>
+                <select name="pendidikan_akhir" id="pendidikan_akhir" class="form-control">
+                    <option value="SMP" {{ $data->pendidikan_akhir == 'SMP' ? 'selected' : '' }}>SMP</option>
+                    <option value="SMA" {{ $data->pendidikan_akhir == 'SMA' ? 'selected' : '' }}>SMA</option>
+                    <option value="MAN" {{ $data->pendidikan_akhir == 'MAN' ? 'selected' : '' }}>MAN</option>
+                    <option value="D3" {{ $data->pendidikan_akhir == 'D3' ? 'selected' : '' }}>D3</option>
+                    <option value="D4/S1" {{ $data->pendidikan_akhir == 'D4/S1' ? 'selected' : '' }}>D4/S1</option>
+                    <option value="S2" {{ $data->pendidikan_akhir == 'S2' ? 'selected' : '' }}>S2</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="">Status Kawin:</label>
@@ -53,14 +67,7 @@
             </div>
 
             <br>
-            {{-- <div class="form-group">
-                <label for="">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Masukkan Email">
-            </div>
-            <div class="form-group">
-                <label for="">Password</label>
-                <input type="text" name="password" class="form-control" placeholder="Masukkan Password">
-            </div> --}}
+
             <br>
             <div class="form-grup" >
                 <button class="btn-primary btn btn-sm float-end">Simpan</button>

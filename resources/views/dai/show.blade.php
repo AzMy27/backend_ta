@@ -8,7 +8,7 @@
                     <div class="card-body d-flex flex-column align-items-center text-center">
                         <img src="{{'/storage/'.$data->foto_dai}}" alt="Foto Dai" class="rounded-circle mb-3" style="max-width: 150px; height: auto; object-fit: cover;">
                         <h3 class="card-title">{{$data->nama}}</h3>
-                        <p class="card-text">{{$data->nik}}</p>
+                        <p class="card-text">{{substr($data->nik, 0, 4) . str_repeat('x',strlen($data->nik) - 4)}}</p>
                     </div>
                     <tr>
                         <th class="bg-light">No. Hp</th>
@@ -25,6 +25,14 @@
                     <tr>
                         <th class="bg-light">Alamat</th>
                         <td>{{$data->alamat}}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">RT</th>
+                        <td>{{$data->rt}}</td>
+                    </tr>
+                    <tr>
+                        <th class="bg-light">RW</th>
+                        <td>{{$data->rw}}</td>
                     </tr>
                     <tr>
                         <th class="bg-light">Pendidikan</th>

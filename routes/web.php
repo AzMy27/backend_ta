@@ -8,11 +8,14 @@ use App\Http\Controllers\loginController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KecamatanController;
-
+use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return to_route('dai.index');
 });
-
+Route::get('/data-migrate', function () {
+    Artisan::call('migrate');
+});
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/admin/dashboard',[DashboardController::class,'index'])->middleware('auth')->name('admin.dashboard');
 
 Route::get('/login',[loginController::class,'index'])->name('login');
@@ -66,7 +69,7 @@ Route::controller(ReportController::class)->middleware('auth')->group(function()
     Route::get('admin/reports/{id}/approve/comment/kecamatan', 'kecamatanApproveCommentGet')->name('reports.kecamatan.approve.comment.get');
     Route::post('admin/reports/{id}/approve/comment/kecamatan', 'kecamatanApproveCommentPost')->name('reports.kecamatan.approve.comment.post');
     Route::get('admin/reports/{id}/comment/kecamatan','kecamatanRejectCommentGet')->name('reports.kecamatan.comment.get');
-    Route::post('admin/reports/{id}/comment/kecamatan','kecamatanCRejectommentPost')->name('reports.kecamatan.comment.post');
+    Route::post('admin/reports/{id}/comment/kecamatan','kecamatanRejectCommentPost')->name('reports.kecamatan.comment.post');
     // PDF
     Route::get('/reports/{id}/download/pdf',  'downloadPDF')->name('reports.download');
     Route::get('/reports/week/pdf', 'weekRecapPDF')->name('reports.week');
