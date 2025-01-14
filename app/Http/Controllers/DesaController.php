@@ -28,7 +28,12 @@ class DesaController extends Controller
         $dataDesa = $request->validate([
             'nama_desa' => 'required',
             'nama_kepala' => 'required',
-            'no_telp_desa' => 'required',
+            'no_telp_desa' => 'required|numeric',
+        ],[
+            'nama_desa.required' => 'Nama Desa Wajib Diisi',
+            'nama_kepala.required' => 'Nama Kepala Desa Wajib Diisi',
+            'no_telp_desa.required' => 'No Telp Desa Wajib Diisi',
+            'no_telp_desa.numeric' => 'No Telp Desa Harus berupa angka'
         ]);
         
         $dataDesa['user_id'] = User::create([
@@ -70,7 +75,12 @@ class DesaController extends Controller
         $dataDesa = $request->validate([
             'nama_desa' => 'required',
             'nama_kepala' => 'required',
-            'no_telp_desa' => 'required',
+            'no_telp_desa' => 'required|numeric',
+        ],[
+            'nama_desa.required' => 'Nama Desa Wajib Diisi',
+            'nama_kepala.required' => 'Nama Kepala Desa Wajib Diisi',
+            'no_telp_desa.required' => 'No Telp Desa Wajib Diisi',
+            'no_telp_desa.numeric' => 'No Telp Desa Harus berupa angka',
         ]);
 
         $desa->update($dataDesa);

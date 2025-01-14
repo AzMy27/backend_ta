@@ -8,7 +8,11 @@
         </div>
         <div class="d-flex gap-3 align-items-center">
             <form action="{{route('reports.month')}}" id="monthSelect" method="GET" class="d-flex gap-2">
-                <input type="month" name="date" class="form-control form-control-sm" value="{{ now()->format('Y-m') }}">
+                <input type="month" 
+                       name="date" 
+                       class="form-control form-control-sm" 
+                       value="{{ now()->format('Y-m') }}"
+                       lang="id">
                 <button type="submit" class="btn btn-sm {{ Request::routeIs('reports.month') ? 'btn-success' : 'btn-outline-success' }}">
                     <i class="fas fa-calendar-alt me-1"></i> Rekap
                 </button>
@@ -33,7 +37,7 @@
                     <thead>
                         <tr>
                             <th>Nama Dai</th>
-                            <th>Domisili</th>
+                            <th>Tempat Tugas</th>
                             <th>Judul Kegiatan</th>
                             <th>Dikirim</th>
                             <th>Status Desa</th>

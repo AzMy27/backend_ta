@@ -26,7 +26,7 @@
             padding: 2rem;
             margin-top: 2rem;
         }
-        
+
         .social-login-btn {
             width: 40px;
             height: 40px;
@@ -88,6 +88,26 @@
             max-width: 100%;
             height: auto;
         }
+
+        /* Password toggle style */
+        .password-field {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .password-toggle:hover {
+            color: #0d6efd;
+        }
     </style>
 </head>
 <body>
@@ -97,14 +117,11 @@
                 <div class="login-container">
                     <div class="row align-items-center">
                         <div class="col-md-6 mb-4 mb-md-0">
-                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                            <img src="{{url('storage/assets/images/logo5.jpeg')}}"
                             class="img-fluid" alt="Bengkalis Bermasa">
-                            {{-- <img src="{{url('storage/assets/images/bengkalis-bermasa.png')}}"
-                            class="img-fluid" alt="Bengkalis Bermasa"> --}}
                         </div>
                         <div class="col-md-6">
                             <h2 class="text-center mb-4">Selamat Datang!</h2>
-                            
                             <form action="{{route('login.submit')}}" method="POST">
                                 @csrf
                                 @if (session()->has('warning'))
@@ -119,7 +136,12 @@
                                 
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control" id="password" required>
+                                    <div class="password-field">
+                                        <input type="password" name="password" class="form-control" id="password" required>
+                                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                                            <i class="far fa-eye" id="toggleIcon"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -127,10 +149,10 @@
                                         <input type="checkbox" name="remember" class="form-check-input" id="remember">
                                         <label class="form-check-label" for="remember">Ingatkan Saya</label>
                                     </div>
+                                    {{-- <a href="{{route('password.request')}}" class="text-end">Lupa Password?</a> --}}
                                 </div>
                                 
                                 <button type="submit" class="btn btn-primary w-100 login-btn mb-3">Login</button>
-                                
                             </form>
                         </div>
                     </div>
@@ -143,16 +165,26 @@
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <p class="text-white mb-0">&copy; 2025 Dai Bermasa.</p>
-                <div class="d-flex gap-3">
-                    <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-white"><i class="fab fa-google"></i></a>
-                    <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
-                </div>
             </div>
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

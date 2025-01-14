@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Events\PasswordReset;
 
 class ApiAuthController extends Controller
 {
@@ -65,37 +67,6 @@ class ApiAuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'An unexpected error occurred'
-            ], 500);
-        }
-    }
-
-    public function changePassword(Request $request)
-    {
-        try {
-            $request->validate([
-                'current_password' => 'required',
-                'new_password' => 'required|min:8|confirmed'
-            ]);
-            $user = Auth::user();
-            
-            if (!Hash::check($request->current_password, $user->password)) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Password lama salah'
-                ], 400);
-            }
-            $user->password = Hash::make($request->new_password);
-            $user->save();
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Password berhasil diganti',
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Password gagal diganti',
-                'error' => $e->getMessage(),
             ], 500);
         }
     }

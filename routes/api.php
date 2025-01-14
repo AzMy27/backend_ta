@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiReportController;
 use App\Http\Controllers\ApiReportsController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\ApiDaiController;
+use App\Http\Controllers\ApiPasswordController;
 use App\Http\Controllers\FCMTokenController;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('daiShow',[ApiDaiController::class,'show']);
     Route::post('daiUpdate',[ApiDaiController::class,'update']);
     Route::post('logoutAPI', [ApiAuthController::class, 'logoutAPI']);
-    Route::post('changePassword',[ApiAuthController::class,'changePassword']);
+    Route::post('changePassword',[ApiPasswordController::class,'changePassword']);
+    Route::post('forgotPassword', [ApiAuthController::class, 'forgotPassword']);
+    Route::post('resetPassword', [ApiAuthController::class, 'resetPassword']);
     Route::post('saveToken',[FCMTokenController::class, 'saveFirebaseToken']);
 });

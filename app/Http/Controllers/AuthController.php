@@ -9,7 +9,7 @@ use App\Models\Kecamatan;
 use Illuminate\Support\Facades\Hash;
 
 
-class loginController extends Controller
+class AuthController extends Controller
 {
     public function index()
     {
@@ -34,11 +34,21 @@ class loginController extends Controller
             'password'=>'required',
         ]);
 
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user){
+            return back()->with('warning', 'Pengguna tidak tersedia');
+        }
+
+        if(!Hash::check($request->password, $user->password)){
+            return back()->with('warning', 'Password salah');
+        }
+
         $credentials = $request->only('email','password');
 
         $credentials['level'] = ['kecamatan','desa','admin'];
 
-        if(Auth::attempt($credentials)){
+        if(Auth::attempt($credentials, $request->only('email', 'password'))){
             $request->session()->regenerate();
             $user = Auth::user();
             if($user->level =='admin'){
@@ -49,7 +59,7 @@ class loginController extends Controller
                 return redirect()->route('admin.dashboard');
             }
         }else{
-            return back()->with('warning','Login gagal username dan password tidak ditemukan');
+            return back()->with('warning','Login gagal email dan password tidak ditemukan');
         }
     }
 
@@ -57,26 +67,5 @@ class loginController extends Controller
     {
         Auth::logout();
         return to_route('login');
-    }
-
-    public function changePage()
-    {
-        return view('password.change');
-    }
-
-    public function changePassword(Request $request)
-    {
-        $request->validate([
-            'old_password'=>'required',
-            'new_password'=>'required|min:8|confirmed',
-        ]);
-        $user = Auth::user();
-
-        if(!Hash::check($request->old_password, $user->password)){
-            return back()->with('warning','Password lama tidak sesuai');
-        }
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-        return back()->with('success', 'Password berhasil diubah');
     }
 }

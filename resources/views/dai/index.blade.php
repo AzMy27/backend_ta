@@ -32,43 +32,25 @@
             </thead>
             <tbody>
                 @foreach ($data as $key=>$item)
-                <tr >
+                <tr>
                     <td>{{$key+1}}</td>
                     <td>{{ substr($item->nik, 0, 4) . str_repeat('x', strlen($item->nik) - 4) }}</td>
                     <td>{{$item->nama}}</td>
                     <td>{{$item->alamat}}</td>
                     <td>{{$item->desa->nama_desa}}, {{$item->desa->kecamatan->nama_kecamatan}}</td>
                     <td style="width: 1%">
-                        <!-- Modal Konfirmasi -->
-                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmDeleteLabel">Konfirmasi Hapus</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Apakah Anda yakin ingin menghapus data ini?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="btn-group">
-                            <a href="{{route('dai.show',$item->id)}}" class="btn btn-sm btn-success">
-                                <i class="fa fa-eye"></i>Lihat
+                            <a href="{{route('dai.show',$item->id)}}" class="btn btn-success d-block mb-1">
+                                <i class="fa fa-eye"></i> Lihat
                             </a>
-                            <a href="{{route('dai.edit',$item->id)}}" class="btn btn-sm btn-warning">
-                                <i class="fa fa-edit"></i>Ubah
+                            <a href="{{route('dai.edit',$item->id)}}" class="btn btn-warning d-block mb-1">
+                                <i class="fa fa-edit"></i> Ubah
                             </a>
-                            <form action="{{route('dai.destroy',$item->id)}}" method="POST" style="display: inline;">
+                            <form action="{{route('dai.destroy',$item->id)}}" method="POST" id="delete-form-{{$item->id}}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="fa fa-trash"></i>Hapus
+                                <button type="button" class="btn btn-danger d-block" onclick="confirmDelete({{$item->id}})">
+                                    <i class="fa fa-trash"></i> Hapus
                                 </button>
                             </form>
                         </div>
@@ -80,4 +62,5 @@
         @endif
     </div>
 </div>
+
 @endsection

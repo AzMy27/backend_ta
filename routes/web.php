@@ -4,11 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DaiController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\loginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\KecamatanController;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\PasswordController;
+
+
 Route::get('/', function () {
     return to_route('dai.index');
 });
@@ -18,11 +21,23 @@ Route::get('/data-migrate', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/admin/dashboard',[DashboardController::class,'index'])->middleware('auth')->name('admin.dashboard');
 
-Route::get('/login',[loginController::class,'index'])->name('login');
-Route::post('/login',[loginController::class,'submit'])->name('login.submit');
-Route::get('/logout',[loginController::class,'logout'])->middleware('auth')->name('logout');
-Route::get('/change_password',[loginController::class,'changePage'])->middleware('auth')->name('password.change');
-Route::post('/change_password',[loginController::class,'changePassword'])->middleware('auth')->name('password.confirmed');
+Route::get('/login',[AuthController::class,'index'])->name('login');
+Route::post('/login',[AuthController::class,'submit'])->name('login.submit');
+Route::get('/logout',[AuthController::class,'logout'])->middleware('auth')->name('logout');
+
+Route::controller(PasswordController::class)->group(function(){
+    Route::middleware('auth')->group(function() {
+        Route::get('/change-password','changePage')->name('password.change');
+        Route::post('/change-password','changePassword')->name('password.confirmed');
+    });
+    
+    Route::middleware('guest')->group(function() {
+        Route::get('/forgot-password', 'forgotPage')->name('password.request');
+        Route::post('/forgot-password', 'forgotPassword')->name('password.email');
+        Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
+        Route::post('/reset-password', 'resetPassword')->name('password.update');
+    });
+});
 
 Route::controller(DaiController::class)->middleware('auth')->group(function(){
     Route::get('/admin/dai', 'index')->name('dai.index');
