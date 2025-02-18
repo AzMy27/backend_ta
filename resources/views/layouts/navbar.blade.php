@@ -1,3 +1,51 @@
+<style>
+    .sb-sidenav {
+        background-color: #212529;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .nav-link {
+        color: rgba(255, 255, 255, 0.5);
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .nav-link:hover {
+        color: #ffffff;
+        background-color: #0d6efd;
+        text-decoration: none;
+    }
+
+    .nav-link.active {
+        color: #ffffff;
+        background-color: #0d6efd;
+    }
+
+    .sb-nav-link-icon {
+        margin-right: 0.5rem;
+    }
+
+    .sb-sidenav-menu-heading {
+        padding: 1.75rem 1rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .sb-sidenav-footer {
+        padding: 0.75rem;
+        background-color: #343a40;
+    }
+
+    .small {
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+</style>
+
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
         <div class="nav">
@@ -49,3 +97,4 @@
         {{ Auth::user()->name}}
     </div>
 </nav>
+

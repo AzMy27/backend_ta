@@ -133,8 +133,8 @@ class ApiReportsController extends Controller
             $a['purpose'] = $report->purpose;
             $a['validasi_desa'] = $report->validasi_desa==null ? 'Belum divalidasi ' : $report->validasi_desa;
             $a['validasi_kecamatan'] = $report->validasi_kecamatan==null ? 'Belum divalidasi ' : $report->validasi_kecamatan;
-            $a['koreksi_desa'] = $report->koreksi_desa == null ? 'Belum dikoreksi' : $report->koreksi_desa;
-            $a['koreksi_kecamatan'] = $report->koreksi_kecamatan == null ? 'Belum dikoreksi' : $report->koreksi_kecamatan;
+            $a['koreksi_desa'] = $report->koreksi_desa == null ? 'Belum diperiksa' : $report->koreksi_desa;
+            $a['koreksi_kecamatan'] = $report->koreksi_kecamatan == null ? 'Belum diperiksa' : $report->koreksi_kecamatan;
             $a['images'] = [];
             foreach(json_decode($report->images,true) as $image) {
                 $a['images'][]= asset('storage/'.$image);
@@ -209,12 +209,17 @@ class ApiReportsController extends Controller
                 'target' => $validateData['target'],
                 'purpose' => $validateData['purpose'],
                 'images' => json_encode($paths),
-                
-                'validasi_desa' => null,
-                'koreksi_desa' => null,
-                'validasi_kecamatan' => null,
-                'koreksi_kecamatan' => null,
             ];
+
+            if ($report->validasi_kecamatan === 'ditolak') {
+                $reportData['validasi_kecamatan'] = null;
+                $reportData['koreksi_kecamatan'] = null;
+            }
+
+            if ($report->validasi_desa === 'ditolak') {
+                $reportData['validasi_desa'] = null;
+                $reportData['koreksi_desa'] = null;
+            }
 
             $report->update($reportData);
 
@@ -241,5 +246,20 @@ class ApiReportsController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    
+    public function getReportStatus($id) {
+        $report = Report::findOrFail($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'report_id' => $report->id,
+                'status_desa' => $report->validasi_desa,
+                'status_kecamatan' => $report->validasi_kecamatan,
+                'koreksi_desa' => $report->koreksi_desa,
+                'koreksi_kecamatan' => $report->koreksi_kecamatan,
+            ],
+        ]);
     }
 }

@@ -19,7 +19,7 @@
                                         <input type="text" name="nama_kepala" class="form-control" placeholder="Masukkan Nama Kepala Desa">
                                     </div>       
                                     <div class="form-group">
-                                        <label for="">No. HP Desa</label>
+                                        <label for="">No. Telp Desa</label>
                                         <input type="text" name="no_telp_desa" class="form-control" placeholder="Masukkan No. Hp Desa">
                                     </div>                             
 

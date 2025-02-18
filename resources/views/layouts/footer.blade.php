@@ -21,6 +21,67 @@
 <script src="{{url('/js/datatables-simple-demo.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    const currentPath = window.location.pathname;
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        
+        const cleanHref = href.replace(/^https?:\/\/[^\/]+/, '');
+        
+        if (currentPath === cleanHref || currentPath.startsWith(cleanHref)) {
+            link.classList.add('active');
+        }
+        
+        link.addEventListener('click', function(e) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            
+            this.classList.add('active');
+            
+            localStorage.setItem('activeNavLink', this.getAttribute('href'));
+        });
+    });
+    
+    // Check localStorage on page load
+    const storedActiveLink = localStorage.getItem('activeNavLink');
+    if (storedActiveLink) {
+        const matchingLink = Array.from(navLinks).find(link => 
+            link.getAttribute('href') === storedActiveLink
+        );
+        if (matchingLink) {
+            matchingLink.classList.add('active');
+        }
+    }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current URL path
+    const currentPath = window.location.pathname;
+    
+    // Get all nav links
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Loop through each link
+    navLinks.forEach(link => {
+        // If the link's href matches the current path
+        if (link.getAttribute('href').includes(currentPath)) {
+            link.classList.add('active');
+        }
+        
+        // Add click handler
+        link.addEventListener('click', function() {
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+<script>
     @if ($errors->any())
         Swal.fire({
             icon: 'error',

@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('forgotPassword', [ApiAuthController::class, 'forgotPassword']);
     Route::post('resetPassword', [ApiAuthController::class, 'resetPassword']);
     Route::post('saveToken',[FCMTokenController::class, 'saveFirebaseToken']);
+    Route::post('report/approve/{id}', [ApiReportsController::class, 'approveReport']);
 });

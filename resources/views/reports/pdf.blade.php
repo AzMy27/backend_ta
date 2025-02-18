@@ -70,7 +70,7 @@
             <td>{{ $report->purpose }}</td>
         </tr>
         <tr>
-            <th>Lokasi</th>
+            <th>Tempat Pelaksanaan</th>
             <td>{{ $report->place }}</td>
         </tr>
         <tr>

@@ -8,6 +8,14 @@
         </div>
         <div class="d-flex gap-3 align-items-center">
             <form action="{{route('reports.month')}}" id="monthSelect" method="GET" class="d-flex gap-2">
+                <select name="dai_id" class="form-select form-select-sm" style="min-width: 200px;">
+                    <option value="">Semua Dai</option>
+                    @foreach($daiList as $dai)
+                        <option value="{{ $dai->id }}" {{ request('dai_id') == $dai->id ? 'selected' : '' }}>
+                            {{ $dai->nama }}
+                        </option>
+                    @endforeach
+                </select>
                 <input type="month" 
                        name="date" 
                        class="form-control form-control-sm" 
@@ -41,9 +49,9 @@
                             <th>Judul Kegiatan</th>
                             <th>Dikirim</th>
                             <th>Status Desa</th>
-                            {{-- @if (Auth::user()->isKecamatan()) --}}
+                            @if (Auth::user()->isKecamatan())
                             <th>Status Kecamatan</th>
-                            {{-- @endif --}}
+                            @endif
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -56,24 +64,24 @@
                             <td>{{ \Carbon\Carbon::parse($item->updated_at)->format('d M Y H:i:s') }}</td>
                             <td>
                                 @if ($item->validasi_desa === 'diterima')
-                                    <span class="badge bg-success">Diterima</span>
+                                    <span class="badge bg-success">Sudah Diperiksa</span>
                                 @elseif($item->validasi_desa === 'ditolak')
                                     <span class="badge bg-danger">Ditolak</span>
                                 @else
-                                    <span class="badge bg-warning">Belum Diproses</span>
+                                    <span class="badge bg-warning">Belum Diperiksa</span>
                                 @endif
                             </td>
-                            {{-- @if (Auth::user()->isKecamatan()) --}}
+                            @if (Auth::user()->isKecamatan())
                                 <td>
                                     @if ($item->validasi_kecamatan ==='diterima')
-                                        <span class="badge bg-success">Diterima</span>
+                                        <span class="badge bg-success">Sudah Diperiksa</span>
                                     @elseif($item->validasi_kecamatan === 'ditolak')
                                         <span class="badge bg-danger">Ditolak</span>
                                     @else
-                                        <span class="badge bg-warning">Belum Diproses</span>
+                                        <span class="badge bg-warning">Belum Diperiksa</span>
                                     @endif
                                 </td>
-                            {{-- @endif --}}
+                            @endif
                             <td>
                                 <a href="{{route('reports.show',$item->id)}}" class="btn btn-success btn-sm">
                                     <i class="fas fa-eye me-1"></i> Lihat

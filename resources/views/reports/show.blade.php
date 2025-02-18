@@ -11,19 +11,19 @@
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <tr>
-                                <th class="bg-light" style="width: 30%;">Kegiatan</th>
+                                <th class="bg-light" style="width: 30%;">Sifat Kegiatan</th>
                                 <td>{{$reports->title}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light" style="width: 30%;">Tipe Kegiatan</th>
+                                <th class="bg-light" style="width: 30%;">Jenis Kegiatan</th>
                                 <td>{{$reports->type}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Lokasi</th>
+                                <th class="bg-light">Tempat Pelaksanaan</th>
                                 <td>{{$reports->place}}</td>
                             </tr>                            
                             <tr>
-                                <th class="bg-light">Target</th>
+                                <th class="bg-light">Sasaran</th>
                                 <td>{{$reports->target}}</td>
                             </tr>                            
                             <tr>
@@ -31,7 +31,7 @@
                                 <td>{{$reports->purpose}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Tanggal</th>
+                                <th class="bg-light">Tanggal Kegiatan</th>
                                 <td>{{$reports->date}}</td>
                             </tr>
                             <tr>
@@ -39,15 +39,15 @@
                                 <td>{{$reports->coordinate_point}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Deskripsi</th>
+                                <th class="bg-light">Keterangan</th>
                                 <td>{{$reports->description}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Koreksi Desa</th>
+                                <th class="bg-light">Pesan Perbaikan Desa</th>
                                 <td>{{$reports->koreksi_desa ?? 'Belum dikoreksi'}}</td>
                             </tr>
                             <tr>
-                                <th class="bg-light">Koreksi Kecamatan</th>
+                                <th class="bg-light">Pesan Perbaikan Kecamatan</th>
                                 <td>{{$reports->koreksi_kecamatan ?? 'Belum dikoreksi'}}</td>
                             </tr>
                             <tr>
@@ -90,10 +90,10 @@
                         </a>
                         <div>
                             @if (Auth::user()->isDesa() && $reports->validasi_desa == null)
-                                <form action="{{route('reports.desa.approve',$reports->id)}}" method="POST" style="display: inline-block;">
+                                <form action="{{route('reports.desa.approve',$reports->id)}}" method="POST" onsubmit="confirmApproval(this)">
                                     @csrf
-                                    <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menerima laporan ini?')">
-                                        <i class="fas fa-check me-2"></i>Terima
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check me-2"></i>Terima 
                                     </button>
                                 </form>
                                 <form action="{{route('reports.desa.reject',$reports->id)}}" method="post" style="display: inline-block;">
@@ -105,13 +105,13 @@
                             @endif
                             @if (Auth::user()->isKecamatan() && $reports->validasi_kecamatan == null)
                                 @if ($canValidateKecamatan)
-                                    <form action="{{route('reports.kecamatan.approve',$reports->id)}}" method="POST" style="display: inline-block;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success" onclick="return confirm('Apakah Anda yakin ingin menerima laporan ini?')">
-                                            <i class="fas fa-check me-2"></i>Terima
-                                        </button>
-                                    </form>
-                                    <form action="{{route('reports.kecamatan.reject',$reports->id)}}" method="post" style="display: inline-block;">
+                                <form action="{{route('reports.kecamatan.approve',$reports->id)}}" method="POST" onsubmit="confirmApproval(this)">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check me-2"></i>Terima
+                                    </button>
+                                </form>
+                                <form action="{{route('reports.kecamatan.reject',$reports->id)}}" method="post" style="display: inline-block;">
                                         @csrf
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menolak laporan ini?')">
                                             <i class="fas fa-times me-2"></i>Tolak
@@ -119,7 +119,7 @@
                                     </form>
                                 @else
                                     <div class="alert alert-warning" role="alert">
-                                        Laporan belum disetujui oleh Desa
+                                        Laporan belum diperiksa oleh Desa
                                     </div>
                                 @endif
                             @endif
@@ -151,5 +151,26 @@
     function showImage(imageUrl) {
         const modalImage = document.getElementById('modalImage');
         modalImage.src = imageUrl;
+    }
+</script>
+
+<script>
+    function confirmApproval(form) {
+        event.preventDefault(); // Mencegah form dikirim secara langsung
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: 'Anda ingin membuat pesan perbaikan pada laporan ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Batal',
+            confirmButtonText: 'Ya!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); // Mengirimkan form setelah konfirmasi
+            }
+        });
     }
 </script>

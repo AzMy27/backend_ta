@@ -1,6 +1,9 @@
-@extends('layouts.app',['title'=>'Dashboard','description'=>'Beranda'])
+@extends('layouts.app',['title'=>'Selamat Datang','description'=>'Di aplikasi Dai Bermasa'])
 @section('content')
 <style>
+    #monthGraph {
+        height: 225px !important; 
+    }
     .dashboard-card {
         min-height: 200px;
         cursor: pointer;
@@ -53,6 +56,7 @@
         .number-display {
             height: 70px;
         }
+
     }
     </style>
 <div class="row">
@@ -98,7 +102,7 @@
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="card bg-success text-white mb-4">
-            <div class="card-body">Laporan Diterima</div>
+            <div class="card-body">Laporan Diperiksa</div>
             <div class="card-footer d-flex align-items-center justify-content-between">
                 <div class="small text-white counter">{{$jumlah_report_diterima}}</div>
                 
@@ -125,7 +129,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <canvas id="monthGraph" style="width:100%;max-width:100%"></canvas>
+                <canvas id="monthGraph"></canvas>
                 <script>
                     const xValues = @json($chartLabels);
                     const yValues = @json($chartData);
@@ -141,10 +145,15 @@
                             labels: xValues,
                             datasets: [{
                                 backgroundColor: barColors,
-                                data: yValues
+                                data: yValues,
+                                borderRadius: 5,  // Membuat bar menjadi rounded
+                                maxBarThickness: 50,  // Membatasi ketebalan maksimal bar
+                                minBarLength: 5  // Panjang minimal bar
                             }]
                         },
                         options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
                             legend: {display: false},
                             title: {
                                 display: true,
@@ -154,15 +163,33 @@
                                 yAxes: [{
                                     ticks: {
                                         beginAtZero: true,
-                                        stepSize: 1,
-                                        precision: 0
+                                        callback: function(value) {
+                                            if (value % 1 === 0) {
+                                                return value;
+                                            }
+                                        },
+                                        stepSize: Math.ceil(Math.max(...yValues) / 10)  // Menyesuaikan interval berdasarkan data maksimal
+                                    },
+                                    gridLines: {
+                                        drawBorder: false
+                                    }
+                                }],
+                                xAxes: [{
+                                    gridLines: {
+                                        display: false
                                     }
                                 }]
+                            },
+                            layout: {
+                                padding: {
+                                    left: 10,
+                                    right: 10,
+                                    top: 0,
+                                    bottom: 0
+                                }
                             }
                         }
                     });
-        
-                    // Handle year selection
                     document.getElementById('yearSelector').addEventListener('change', function() {
                         window.location.href = '{{ route("dashboard") }}?year=' + this.value;
                     });

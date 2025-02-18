@@ -176,12 +176,12 @@
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
-                    <th>Kegiatan</th>
-                    <th>Tipe</th>
-                    <th>Lokasi</th>
-                    <th>Target</th>
+                    <th>Sifat</th>
+                    <th>Jenis Kegiatan</th>
                     <th>Tujuan</th>
-                    <th>Deskripsi</th>
+                    <th>Sasaran</th>
+                    <th>Tempat Pelaksanaan</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
             <tbody>
@@ -214,6 +214,7 @@
                 </div>
             @endif
         @endforeach
+        <br><br><br>
         <br><br><br>
 
     @endforeach
